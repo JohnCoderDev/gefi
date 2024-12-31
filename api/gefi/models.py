@@ -191,3 +191,16 @@ class MovementsModel(models.Model):
         to=CurrencyModel,
         on_delete=models.PROTECT,
     )
+
+
+class CurrentAccountBalanceModel(models.Model):
+    current_value = models.FloatField(
+        verbose_name="current value in the account",
+        null=False,
+        blank=False,
+    )
+    currency = models.ForeignKey(
+        verbose_name="currency of your balance",
+        to=CurrencyModel,
+        on_delete=models.PROTECT,
+    )
