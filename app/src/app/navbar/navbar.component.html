@@ -1,9 +1,13 @@
 <mat-accordion class="navbar-accordion">
     <app-navbar-expansion-panel icon="bar_chart" label="Dashboards">
-        <app-navbar-button link="dashboard/GainVSLoss">Gastos vs Ganhos</app-navbar-button>
+        <app-navbar-button link="dashboard/GainVSLoss" icon="ssid_chart_rounded">Gastos vs Ganhos</app-navbar-button>
     </app-navbar-expansion-panel>
 
     <app-navbar-expansion-panel icon="edit_document" label="Cadastros">
-        <app-navbar-button link="cadastros/inicial">Cadastro inicial</app-navbar-button>
+        <app-navbar-button link="cadastros/inicial" icon="app_registration_outline">Cadastro Inicial</app-navbar-button>
+        <app-navbar-button link="cadastros/moedas" icon="attach_money_rounded">Cadastro de Moedas</app-navbar-button>
+        <app-navbar-button link="cadastros/movimentacoes" icon="currency_exchange_rounded">
+            Cadastro de Movimentações
+        </app-navbar-button>
     </app-navbar-expansion-panel>
 </mat-accordion>

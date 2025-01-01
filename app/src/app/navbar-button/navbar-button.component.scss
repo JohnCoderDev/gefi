@@ -5,10 +5,11 @@
     border-radius: 12px;
     width: 100%;
     user-select: none;
+    margin-top: 5px;
 }
 
 .navbar-button-icon {
-    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .navbar-button-content {
@@ -17,6 +18,7 @@
 
 .navbar-button-container:hover {
     cursor: pointer;
+    background: var(--mat-expansion-header-hover-state-layer-color, color-mix(in srgb, var(--mat-sys-on-surface) calc(var(--mat-sys-hover-state-layer-opacity) * 100%), transparent));
 }
 
 .navbar-button-link {
