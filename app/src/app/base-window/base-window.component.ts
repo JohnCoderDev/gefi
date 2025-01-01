@@ -6,11 +6,12 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { RouterOutlet } from '@angular/router';
 
 
 @Component({
   selector: 'app-base-window',
-  imports: [MatSidenavModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatIconModule, MatExpansionModule, NavbarComponent],
+  imports: [MatSidenavModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatIconModule, MatExpansionModule, NavbarComponent, RouterOutlet],
   templateUrl: './base-window.component.html',
   styleUrl: './base-window.component.scss'
 })

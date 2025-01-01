@@ -10,5 +10,4 @@ import { NavbarExpansionPanelComponent } from '../navbar-expansion-panel/navbar-
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
-export class NavbarComponent {
-}
+export class NavbarComponent { }

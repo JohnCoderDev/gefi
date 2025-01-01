@@ -1,9 +1,10 @@
-<div class="navbar-button-container">
-    @if (icon) {
-    <mat-icon class="navbar-button-icon">{{icon}}</mat-icon>
-    }
-    <p class='navbar-button-content'>
-        <ng-content></ng-content>
-    </p>
-</div>
-<mat-divider></mat-divider>
+<a [routerLink]="link" class="navbar-button-link">
+    <div class="navbar-button-container">
+        @if (icon) {
+        <mat-icon class="navbar-button-icon">{{icon}}</mat-icon>
+        }
+        <p class='navbar-button-content'>
+            <ng-content></ng-content>
+        </p>
+    </div>
+</a>
