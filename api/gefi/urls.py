@@ -7,6 +7,14 @@ from . import views
 router = routers.DefaultRouter()
 router.register(r"users", views.UserViewSet)
 router.register(r"groups", views.GroupViewSet)
+router.register(r"MovimentationCategory", views.MovimentationCategoryViewSet)
+router.register(r"Benefited", views.BenefitedViewSet)
+router.register(r"Benefit", views.BenefitViewSet)
+router.register(r"PaymentMethod", views.PaymentMethodViewSet)
+router.register(r"Currency", views.CurrencyViewSet)
+router.register(r"Movements", views.MovementsViewSet)
+router.register(r"CurrentAccountBalance", views.CurrentAccountBalanceViewSet)
+
 
 urlpatterns = [
     path("", include(router.urls)),
