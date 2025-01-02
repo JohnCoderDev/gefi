@@ -1,14 +1,14 @@
-import { AfterContentInit, Component } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { GefiApiService } from '../../services/gefi/gefi-api.service';
 import { AlertSnackbarComponent } from '../alert-snackbar/alert-snackbar.component';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AsyncPipe } from '@angular/common';
-import { Observable } from 'rxjs';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-currency-register',
@@ -20,64 +20,77 @@ import { Observable } from 'rxjs';
     MatTableModule,
     FormsModule,
     ReactiveFormsModule,
-    AsyncPipe
+    MatPaginatorModule,
+    MatSortModule
   ],
   templateUrl: './currency-register.component.html',
   styleUrl: './currency-register.component.scss',
   standalone: true
 })
-export class CurrencyRegisterComponent implements AfterContentInit {
-  constructor(private gefiService: GefiApiService) { }
-  displayedColumns: string[] = ['name', 'symbol'];
-  currenciesData$ !: Observable<any>;
-  currenciesData !: any;
+export class CurrencyRegisterComponent implements AfterViewInit {
+  displayedColumns: string[] = ['delete', 'name', 'symbol'];
   hasData: boolean = false;
-  alert: AlertSnackbarComponent = new AlertSnackbarComponent();
+  snackbar: AlertSnackbarComponent = new AlertSnackbarComponent();
   dataSource = new MatTableDataSource();
+  currencyFormGroup = new FormGroup({
+    name: new FormControl('', [Validators.required]),
+    symbol: new FormControl('', [Validators.required])
+  })
 
-  currencyFormGroup = new FormGroup(
-    {
-      name: new FormControl('', [Validators.required]),
-      symbol: new FormControl('', [Validators.required])
-    }
-  )
+  constructor(private gefiService: GefiApiService) { }
+  @ViewChild(MatPaginator) paginator !: MatPaginator;
+  @ViewChild(MatSort) sort !: MatSort;
 
-  async ngAfterContentInit(): Promise<void> {
-    await this.updateCurrencies();
+  ngAfterViewInit(): void {
+    this.updateCurrencies();
   }
 
-  async saveCurrentCurrency(): Promise<void> {
+  saveCurrencyData(): void {
     if (!this.currencyFormGroup.valid) {
-      this.alert.openSnackBar('Preencha todos os campos', 'Ok');
+      this.snackbar.okSnackBar('Preencha todos os campos');
       return;
     }
 
     this.currencyFormGroup.value.symbol = this.currencyFormGroup.value.symbol?.toUpperCase();
-    const data = this.currencyFormGroup.value;
-    const response = await this.gefiService.post('Currency', data);
+    this.gefiService
+      .post('Currency', this.currencyFormGroup.value)
+      .subscribe(
+        {
+          next: _ => {
+            this.updateCurrencies();
+            this.resetForms();
+            this.snackbar.okSnackBar('Moeda criada com sucesso!');
+          },
+          error: error => {
+            const errorMessage = Object.values(error?.error ?? { erro: 'Não foi possível obter os dados' })[0];
+            this.snackbar.okSnackBar(String(errorMessage));
+          }
+        }
+      )
+  }
 
-    response.subscribe(async res => {
-      if (res.status == 201) {
-        this.alert.openSnackBar('Moeda criada com sucesso', 'Ok');
-        this.currencyFormGroup.reset();
-        await this.updateCurrencies();
-      } else {
-        this.alert.openSnackBar(`Erro: ${res.status}, ${JSON.stringify(res.body)}`, "Ok");
+  updateCurrencies(): void {
+    this.gefiService.get('Currency').subscribe(response => {
+      this.dataSource.data = response.body;
+      this.hasData = response.body.length > 0;
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+    })
+  }
+
+  deleteCurrency(currencyName: string): void {
+    this.gefiService.delete(`Currency/${currencyName}`).subscribe({
+      next: _ => {
+        this.updateCurrencies();
+        this.snackbar.okSnackBar('moeda deletada com sucesso');
+      },
+      error: _ => {
+        this.snackbar.okSnackBar('não foi possível deletar a moeda');
       }
     })
   }
 
-  async updateCurrencies(): Promise<void> {
-    this.currenciesData$ = this.gefiService.get('Currency');
-    this.currenciesData$.subscribe(
-      response => {
-        this.currenciesData = response.body;
-        this.dataSource.data = response.body.results;
-        this.hasData = this.currenciesData.count > 0;
-      },
-      error => {
-        console.log('erro ao carregar as moedas');
-      }
-    )
+  resetForms(): void {
+    this.currencyFormGroup.reset();
   }
 }

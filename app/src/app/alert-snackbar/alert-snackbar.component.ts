@@ -9,7 +9,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class AlertSnackbarComponent {
   private _snackBar = inject(MatSnackBar);
+
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
+  }
+
+  okSnackBar(message: string) {
+    this._snackBar.open(message, 'Ok');
   }
 }

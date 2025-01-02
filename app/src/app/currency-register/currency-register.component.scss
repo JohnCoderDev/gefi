@@ -2,13 +2,20 @@
     display: grid;
     grid-auto-flow: column;
     height: 100%;
-    align-items: center;
+    justify-content: center;
+    align-items: first baseline;
+    gap: 120px;
 }
 
 .form-field-container {
     display: flex;
     flex-direction: column;
+    width: max-content;
     align-items: center;
+    position: absolute;
+    top: 30%;
+    left: 20%;
+    border: 1;
 }
 
 .currency-form-field {
@@ -16,7 +23,13 @@
 }
 
 .table-currencies-container {
-    height: 90%;
+    width: 648px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    top: 25%;
+    left: 50%;
 }
 
 .currency-forms {
@@ -27,6 +40,18 @@
 
 .no-currency-data-container {
     text-align: center;
-    user-select: none;
-    // word-wrap: break-word;
+    position: absolute;
+    top: 35%;
+    right: 25%;
+}
+
+.currency-form-button-group {
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.currencies-table {
+    width: 100%;
 }

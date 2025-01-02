@@ -1,50 +1,60 @@
-<div class="currency-screen-container">
-    <div class="form-field-container">
-        <form class="currency-forms" [formGroup]="currencyFormGroup">
-            <mat-form-field class="currency-form-field">
-                <mat-label>Nome da moeda</mat-label>
-                <input matInput required formControlName="name" placeholder="Ex.: Real Brasileiro, Dólar...">
-                <mat-icon matSuffix>text_fields</mat-icon>
+<div class="form-field-container">
+    <form class="currency-forms" [formGroup]="currencyFormGroup" #formDirective="ngForm">
+        <mat-form-field class="currency-form-field">
+            <mat-label>Nome da moeda</mat-label>
+            <input matInput required appInvalidCurrencyName formControlName="name"
+                placeholder="Ex.: Real Brasileiro, Dólar...">
+            <mat-icon matSuffix>text_fields</mat-icon>
 
-                <mat-hint>Digite um nome</mat-hint>
-                @if (currencyFormGroup.get('name')?.hasError('required')) {
-                <mat-error>Um nome é <strong>obrigatório</strong></mat-error>
-                }
-            </mat-form-field>
+            <mat-hint>Digite um nome</mat-hint>
+            @if (currencyFormGroup.get('name')?.hasError('required')) {
+            <mat-error>Um nome é <strong>obrigatório</strong></mat-error>
+            } @else if ( currencyFormGroup.get('name')?.hasError('appInvalidCurrencyName')) {
+            <mat-error>Esse nome já está sendo usado</mat-error>
+            }
+        </mat-form-field>
 
-            <mat-form-field class="currency-form-field">
-                <mat-label>Simbolo da moeda</mat-label>
-                <input matInput required formControlName="symbol" placeholder="Ex.: BRL, URL...">
-                <mat-icon matSuffix>text_fields</mat-icon>
+        <mat-form-field class="currency-form-field">
+            <mat-label>Simbolo da moeda</mat-label>
+            <input matInput required formControlName="symbol" placeholder="Ex.: BRL, USD...">
+            <mat-icon matSuffix>text_fields</mat-icon>
 
-                <mat-hint>Digite um símbolo para a moeda</mat-hint>
-                @if (currencyFormGroup.get('symbol')?.hasError('required')) {
-                <mat-error>Um símbolo é <strong>obrigatório</strong></mat-error>
-                }
-            </mat-form-field>
-            <button mat-button (click)="saveCurrentCurrency()" [disabled]="!currencyFormGroup.valid">Salvar</button>
-        </form>
+            <mat-hint>Digite um símbolo para a moeda</mat-hint>
+            @if (currencyFormGroup.get('symbol')?.hasError('required')) {
+            <mat-error>Um símbolo é <strong>obrigatório</strong></mat-error>
+            }
+        </mat-form-field>
+    </form>
+
+    <div class="currency-form-button-group">
+        <button mat-button (click)="saveCurrencyData()" [disabled]="!currencyFormGroup.valid">Salvar</button>
+        <button mat-button (click)="resetForms()">Resetar</button>
     </div>
+</div>
+<div [class]="hasData? 'table-currencies-container' : 'hide-element'">
+    <table mat-table [dataSource]="dataSource" class="currencies-table" matSort>
+        <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let currency"><button mat-icon-button (click)="deleteCurrency(currency.name)">
+                    <mat-icon>delete_outlined_rounded</mat-icon></button></td>
+        </ng-container>
+        <ng-container matColumnDef="name">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef sortActionDescription="Ordenar por nome">Nome da
+                Moeda</th>
+            <td mat-cell *matCellDef="let currency">{{currency.name}}</td>
+        </ng-container>
 
-    @if (hasData) {
-    <div class="table-currencies-container">
-        <table mat-table [dataSource]="dataSource">
-            <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef>Nome da Moeda</th>
-                <td mat-cell *matCellDef="let currency">{{currency.name}}</td>
-            </ng-container>
-            <ng-container matColumnDef="symbol">
-                <th mat-header-cell *matHeaderCellDef>Símbolo da Moeda</th>
-                <td mat-cell *matCellDef="let currency">{{currency.symbol}}</td>
-            </ng-container>
+        <ng-container matColumnDef="symbol">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef sortActionDescription="Ordenar por símbolo">
+                Símbolo da Moeda</th>
+            <td mat-cell *matCellDef="let currency">{{currency.symbol}}</td>
+        </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-    </div>
-    } @else {
-    <div class="no-currency-data-container">
-        Não há dados para mostrar, tente cadastrar algumas moedas.
-    </div>
-    }
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator showFirstLastButtons [pageSize]="5"></mat-paginator>
+</div>
+<div [class]="hasData ? 'hide-element': 'no-currency-data-container'">
+    Não há dados para mostrar, tente cadastrar algumas moedas.
 </div>
