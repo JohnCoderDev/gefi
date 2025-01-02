@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-!)xme2usw1hkbj0czy0d#p62%=v3z_cqoyucn(p7#(y3_ojs4e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = []
 
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": [
@@ -38,8 +38,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
     ],
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 15,
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
 }
 
 

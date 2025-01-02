@@ -2,6 +2,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, permissions
 from django_filters.rest_framework import DjangoFilterBackend
 from . import serializers, models
+from rest_framework.pagination import BasePagination
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -51,7 +52,9 @@ class CurrencyViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.CurrencySerializer
     filter_backend = [DjangoFilterBackend]
     permission_classes = [permissions.IsAuthenticated]
-    # filterset_fields = "__all__"
+    filterset_fields = {
+        "name": ["exact"],
+    }
 
 
 class MovementsViewSet(viewsets.ModelViewSet):
