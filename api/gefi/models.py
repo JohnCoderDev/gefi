@@ -191,6 +191,10 @@ class MovementsModel(models.Model):
         to=CurrencyModel,
         on_delete=models.PROTECT,
     )
+    valid = models.BooleanField(
+        verbose_name="the movement is valid or not",
+        default=True,
+    )
 
 
 class CurrentAccountBalanceModel(models.Model):
