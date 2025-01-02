@@ -16,3 +16,16 @@ body {
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.mat-expansion-panel {
+    box-shadow: none;
+}
+
+:root {
+    --mdc-outlined-text-field-error-hover-label-text-color: --mat-form-field-error-text-color;
+    --mat-form-field-error-hover-trailing-icon-color: --mat-form-field-error-text-color;
+}
+
+.mdc-text-field--invalid {
+    all: unset;
+}

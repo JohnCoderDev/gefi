@@ -1,1 +1,50 @@
-<p>currency-register works!</p>
+<div class="currency-screen-container">
+    <div class="form-field-container">
+        <form class="currency-forms" [formGroup]="currencyFormGroup">
+            <mat-form-field class="currency-form-field">
+                <mat-label>Nome da moeda</mat-label>
+                <input matInput required formControlName="name" placeholder="Ex.: Real Brasileiro, Dólar...">
+                <mat-icon matSuffix>text_fields</mat-icon>
+
+                <mat-hint>Digite um nome</mat-hint>
+                @if (currencyFormGroup.get('name')?.hasError('required')) {
+                <mat-error>Um nome é <strong>obrigatório</strong></mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field class="currency-form-field">
+                <mat-label>Simbolo da moeda</mat-label>
+                <input matInput required formControlName="symbol" placeholder="Ex.: BRL, URL...">
+                <mat-icon matSuffix>text_fields</mat-icon>
+
+                <mat-hint>Digite um símbolo para a moeda</mat-hint>
+                @if (currencyFormGroup.get('symbol')?.hasError('required')) {
+                <mat-error>Um símbolo é <strong>obrigatório</strong></mat-error>
+                }
+            </mat-form-field>
+            <button mat-button (click)="saveCurrentCurrency()" [disabled]="!currencyFormGroup.valid">Salvar</button>
+        </form>
+    </div>
+
+    @if (hasData) {
+    <div class="table-currencies-container">
+        <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Nome da Moeda</th>
+                <td mat-cell *matCellDef="let currency">{{currency.name}}</td>
+            </ng-container>
+            <ng-container matColumnDef="symbol">
+                <th mat-header-cell *matHeaderCellDef>Símbolo da Moeda</th>
+                <td mat-cell *matCellDef="let currency">{{currency.symbol}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+    } @else {
+    <div class="no-currency-data-container">
+        Não há dados para mostrar, tente cadastrar algumas moedas.
+    </div>
+    }
+</div>

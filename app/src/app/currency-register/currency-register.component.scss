@@ -1,0 +1,32 @@
+.currency-screen-container {
+    display: grid;
+    grid-auto-flow: column;
+    height: 100%;
+    align-items: center;
+}
+
+.form-field-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.currency-form-field {
+    width: 380px;
+}
+
+.table-currencies-container {
+    height: 90%;
+}
+
+.currency-forms {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.no-currency-data-container {
+    text-align: center;
+    user-select: none;
+    // word-wrap: break-word;
+}
