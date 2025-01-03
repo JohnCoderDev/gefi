@@ -40,10 +40,11 @@ export class MovementRegisterComponent implements AfterViewInit {
   paymentMethods = new Array();
 
   movementFormGroup = new FormGroup({
-    date_movement: new FormControl('', [Validators.required]),
     movemented_value: new FormControl('', [Validators.required]),
+    date_movement: new FormControl(new Date(), [Validators.required]),
     observation: new FormControl('', []),
     movimentation_categories: new FormControl('', [Validators.required]),
+    movimentation_signal: new FormControl(-1, [Validators.required]),
     benefited: new FormControl('', [Validators.required]),
     payment_method: new FormControl('', [Validators.required]),
     benefit: new FormControl('', [Validators.required]),

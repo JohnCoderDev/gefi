@@ -23,17 +23,17 @@
 
         <mat-form-field style="width: 380px;">
             <mat-label>Data da Movimentação</mat-label>
-            <input matInput [matDatepicker]="picker" mask="99/99/9999">
+            <input matInput [matDatepicker]="picker" formControlName="date_movement">
             <mat-datepicker-toggle matIconPrefix [for]="picker"></mat-datepicker-toggle>
             <mat-hint>DD/MM/YYYY</mat-hint>
-            <mat-datepicker #picker formControlName="date_movement"></mat-datepicker>
+            <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
 
         <div class="movement-register-row-group">
             <mat-form-field style="width: 380px;">
                 <mat-label>Categoria da Movimentação</mat-label>
                 <mat-icon matPrefix>category_outline_rounded</mat-icon>
-                <input matInput type="text" [matAutocomplete]="auto">
+                <input matInput type="text" [matAutocomplete]="auto" formControlName="movimentation_categories">
                 <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
                     @for (category of categories; track category) {
                     <mat-option [value]="category.name">{{category.name}} ({{category.signal === -1 ? 'Perda':
@@ -45,7 +45,7 @@
 
             <mat-form-field>
                 <mat-label>Tipo de Categoria</mat-label>
-                <mat-select value="-1">
+                <mat-select formControlName="movimentation_signal">
                     <mat-option [value]="1">Ganho</mat-option>
                     <mat-option [value]="-1">Perda</mat-option>
                 </mat-select>
@@ -57,7 +57,7 @@
             <mat-form-field style="width: 312px;">
                 <mat-label>Beneficiado</mat-label>
                 <mat-icon matPrefix>person</mat-icon>
-                <input matInput type="text" [matAutocomplete]="auto">
+                <input matInput type="text" [matAutocomplete]="auto" formControlName="benefited">
                 <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
                     @for (benefited of benefiteds; track benefited) {
                     <mat-option [value]="benefited.name">{{benefited.name}}</mat-option>
@@ -69,7 +69,7 @@
             <mat-form-field style="width: 280px;">
                 <mat-label>Benefício</mat-label>
                 <mat-icon matPrefix>shopping_cart_outline_rounded</mat-icon>
-                <input matInput type="text" [matAutocomplete]="auto">
+                <input matInput type="text" [matAutocomplete]="auto" formControlName="benefit">
                 <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
                     @for (benefit of benefits; track benefit) {
                     <mat-option [value]="benefit.name">{{benefit.name}}</mat-option>
@@ -82,7 +82,7 @@
         <mat-form-field style="width: 380px;">
             <mat-label>Método de Pagamento</mat-label>
             <mat-icon matPrefix>payments_outline_rounded</mat-icon>
-            <input matInput type="text" [matAutocomplete]="auto">
+            <input matInput type="text" [matAutocomplete]="auto" formControlName="payment_method">
             <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
                 @for (paymentMethod of paymentMethods; track paymentMethod) {
                 <mat-option [value]="paymentMethod.name">{{paymentMethod.name}}</mat-option>
@@ -90,6 +90,13 @@
             </mat-autocomplete>
             <mat-hint>Selecione um método de pagamento</mat-hint>
         </mat-form-field>
+        <mat-form-field style="width: 612px;">
+            <mat-label>Observação</mat-label>
+            <mat-icon matPrefix>text_fields</mat-icon>
+            <textarea matInput formControlName="observation"></textarea>
+            <mat-hint>Digite uma observação</mat-hint>
+        </mat-form-field>
     </form>
+
     <button mat-button [disabled]="!movementFormGroup.valid" (click)="createMovement()">Salvar</button>
 </div>

@@ -29,6 +29,21 @@ export class GefiApiService {
     return this.http.delete(this.buildUrl(path), { observe: 'response' });
   }
 
+  createNewMovementFromForms(data: Object): Observable<any> {
+    this.createPaymentMethod(data);
+    this.updateMovimentationCategory(data);
+    this.updateBenefited(data);
+    this.updateBenefit(data);
+    this.updateCurrentAccountBalance(data);
+    return this.post('Movements', data);
+  }
+
+  private createPaymentMethod(data: Object): void { }
+  private updateMovimentationCategory(data: Object) { }
+  private updateBenefited(data: Object): void { }
+  private updateBenefit(data: Object): void { }
+  private updateCurrentAccountBalance(data: Object): void { }
+
   private buildUrl(path: string): string {
     if (!path.endsWith('/') && !path.includes("/?")) {
       path = path + "/";
