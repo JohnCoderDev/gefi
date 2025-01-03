@@ -1,0 +1,22 @@
+.movement-register-page-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.movement-register-forms {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.movement-register-row-group {
+    display: flex;
+    flex-direction: row;
+    gap: 20px
+}
