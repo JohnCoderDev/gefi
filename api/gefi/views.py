@@ -2,7 +2,6 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, permissions
 from django_filters.rest_framework import DjangoFilterBackend
 from . import serializers, models
-from rest_framework.pagination import BasePagination
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -21,6 +20,11 @@ class MovimentationCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MovimentationCategorySerializer
     filter_backend = [DjangoFilterBackend]
     permission_classes = [permissions.IsAuthenticated]
+    filterset_fields = {
+        "name": ["exact"],
+        "active": ["exact"],
+        "signal": ["exact"],
+    }
 
 
 class BenefitedViewSet(viewsets.ModelViewSet):
@@ -28,7 +32,7 @@ class BenefitedViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BenefitedSerializer
     filter_backend = [DjangoFilterBackend]
     permission_classes = [permissions.IsAuthenticated]
-    # filterset_fields = "__all__"
+    filterset_fields = {"name": ["exact"]}
 
 
 class BenefitViewSet(viewsets.ModelViewSet):
@@ -36,7 +40,14 @@ class BenefitViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BenefitSerializer
     filter_backend = [DjangoFilterBackend]
     permission_classes = [permissions.IsAuthenticated]
-    # filterset_fields = "__all__"
+    filterset_fields = {
+        "name": ["exact"],
+        "benefit_category": ["exact"],
+        "benefited": ["exact"],
+        "benefited__name": ["exact"],
+        "movimentation_categories": ["exact"],
+        "movimentation_categories__name": ["exact"],
+    }
 
 
 class PaymentMethodViewSet(viewsets.ModelViewSet):
@@ -44,7 +55,7 @@ class PaymentMethodViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.PaymentMethodSerializer
     filter_backend = [DjangoFilterBackend]
     permission_classes = [permissions.IsAuthenticated]
-    # filterset_fields = "__all__"
+    filterset_fields = {"name": ["exact"]}
 
 
 class CurrencyViewSet(viewsets.ModelViewSet):

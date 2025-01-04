@@ -28,7 +28,7 @@ class MovimentationCategoryModel(models.Model):
     )
     active = models.BooleanField(
         verbose_name="the current category model is active or not",
-        default=False,
+        default=True,
     )
 
     def __str__(self):
@@ -83,8 +83,8 @@ class BenefitModel(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["name", "benefited"],
-                name="unique_name_benefited_constraint",
+                fields=["name", "benefited", "benefit_category"],
+                name="unique_name_benefit_constraint",
             )
         ]
         ordering = ["-last_movement_timestamp"]
@@ -102,10 +102,11 @@ class BenefitModel(models.Model):
     )
     last_movement_timestamp = models.DateTimeField(
         verbose_name="last time that the movement was done",
+        auto_now=True,
         blank=True,
         null=True,
     )
-    benefited_category = models.SmallIntegerField(
+    benefit_category = models.SmallIntegerField(
         verbose_name="if the benefit is a product or service",
         choices=[(1, "produto"), (2, "serviço")],
         null=False,
