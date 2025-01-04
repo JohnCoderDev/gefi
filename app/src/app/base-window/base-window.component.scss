@@ -1,3 +1,13 @@
+@use '../../mdb-theme-colors.scss' as mdb;
+
+.dark-theme {
+    @include mdb.high-contrast-overrides(dark);
+}
+
+.light-theme {
+    @include mdb.high-contrast-overrides(light);
+}
+
 .drawer-container {
     width: auto;
     height: 100%;
@@ -14,4 +24,10 @@
 .menu-button {
     position: absolute;
     z-index: 9999;
+}
+
+.toggle-theme-button {
+    position: absolute;
+    z-index: 9999;
+    top: 90px;
 }

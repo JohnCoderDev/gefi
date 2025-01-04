@@ -1,10 +1,14 @@
-<mat-drawer-container class="drawer-container">
+<mat-drawer-container class="drawer-container"
+    [class]="'drawer-container ' + (useDarkTheme?'dark-theme': 'light-theme')">
     <mat-drawer #drawer mode="over" class="navbar-container">
         <app-navbar></app-navbar>
     </mat-drawer>
     <mat-drawer-content class="content-container">
         <button mat-icon-button (click)="drawer.toggle()" class="menu-button">
             <mat-icon>menu</mat-icon>
+        </button>
+        <button mat-icon-button (click)="toggleTheme()" class="toggle-theme-button">
+            <mat-icon>{{useDarkTheme? 'sunny_outline_rounded': 'dark_mode_outline_rounded'}}</mat-icon>
         </button>
         <router-outlet></router-outlet>
     </mat-drawer-content>

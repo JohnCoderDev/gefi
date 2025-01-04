@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,4 +15,21 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './base-window.component.html',
   styleUrl: './base-window.component.scss'
 })
-export class BaseWindowComponent { }
+export class BaseWindowComponent implements OnInit {
+  useDarkTheme = true;
+
+  ngOnInit(): void {
+    const isDarkMode = window.localStorage.getItem('useDarkMode');
+    this.useDarkTheme = isDarkMode === 'y';
+    this.saveCurrentThemePreference();
+  }
+
+  toggleTheme(): void {
+    this.useDarkTheme = !this.useDarkTheme;
+    this.saveCurrentThemePreference();
+  }
+
+  private saveCurrentThemePreference(): void {
+    window.localStorage.setItem('useDarkMode', this.useDarkTheme ? 'y' : 'n');
+  }
+}
