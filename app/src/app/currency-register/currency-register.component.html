@@ -3,7 +3,7 @@
         <mat-form-field class="currency-form-field">
             <mat-label>Nome da moeda</mat-label>
             <input matInput required appInvalidCurrencyName formControlName="name"
-                placeholder="Ex.: Real Brasileiro, Dólar...">
+                placeholder="Ex. Real Brasileiro, Dólar...">
             <mat-icon matSuffix>text_fields</mat-icon>
 
             <mat-hint>Digite um nome</mat-hint>
@@ -16,7 +16,7 @@
 
         <mat-form-field class="currency-form-field">
             <mat-label>Simbolo da moeda</mat-label>
-            <input matInput required formControlName="symbol" placeholder="Ex.: BRL, USD...">
+            <input matInput required formControlName="symbol" placeholder="Ex. BRL, USD...">
             <mat-icon matSuffix>text_fields</mat-icon>
 
             <mat-hint>Digite um símbolo para a moeda</mat-hint>
@@ -27,8 +27,9 @@
     </form>
 
     <div class="currency-form-button-group">
-        <button mat-button (click)="saveCurrencyData()" [disabled]="!currencyFormGroup.valid">Salvar</button>
-        <button mat-button (click)="resetForms()">Resetar</button>
+        <button mat-stroked-button (click)="saveCurrencyData()" [disabled]="!currencyFormGroup.valid"
+            style="margin-right: 15px;">Salvar</button>
+        <button mat-stroked-button (click)="resetForms()">Resetar</button>
     </div>
 </div>
 <div [class]="hasData? 'table-currencies-container' : 'hide-element'">

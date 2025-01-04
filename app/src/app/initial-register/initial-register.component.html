@@ -3,8 +3,9 @@
         <mat-form-field class="initial-register-form-field">
             <mat-label>Quantidade atual</mat-label>
             <mat-icon matPrefix>attach_money_rounded</mat-icon>
-            <input #currentValue matInput required type="text" formControlName="current_value" placeholder="0,00"
-                mask="separator.2" thousandSeparator="." decimalMarker="," [leadZero]="true">
+            <input matInput required type="text" formControlName="current_value" placeholder="0,00" mask="separator.2"
+                thousandSeparator="." decimalMarker="," [leadZero]="true" [allowNegativeNumbers]="false"
+                [valueAsNumber]="true">
             <mat-hint>Digite a quantidade atual</mat-hint>
         </mat-form-field>
 
@@ -19,6 +20,6 @@
             <mat-hint>Selecione uma moeda</mat-hint>
         </mat-form-field>
     </form>
-    <button mat-button [disabled]="!initialRegisterFormGroup.valid"
+    <button mat-stroked-button [disabled]="!initialRegisterFormGroup.valid"
         (click)="updateCurrentAccountBalance()">Atualizar</button>
 </div>

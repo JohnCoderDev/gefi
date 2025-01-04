@@ -11,7 +11,7 @@
 
             <mat-form-field>
                 <mat-label>Moeda de Preferência</mat-label>
-                <mat-select formControlName="currency" [value]="preferedCurrency">
+                <mat-select formControlName="currency" [value]="preferedCurrency" placeholder="Ex. Real, Dólar...">
                     <mat-option>Nenhuma</mat-option>
                     @for (currency of availableCurrencies; track currency) {
                     <mat-option [value]="currency.name">{{ currency.name }} ({{currency.symbol}})</mat-option>
@@ -23,7 +23,7 @@
 
         <mat-form-field style="width: 380px;">
             <mat-label>Data da Movimentação</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="date_movement">
+            <input matInput [matDatepicker]="picker" formControlName="date_movement" placeholder="DD/MM/YYYY">
             <mat-datepicker-toggle matIconPrefix [for]="picker"></mat-datepicker-toggle>
             <mat-hint>DD/MM/YYYY</mat-hint>
             <mat-datepicker #picker></mat-datepicker>
@@ -33,10 +33,16 @@
             <mat-form-field style="width: 380px;">
                 <mat-label>Categoria da Movimentação</mat-label>
                 <mat-icon matPrefix>category_outline_rounded</mat-icon>
-                <input matInput type="text" [matAutocomplete]="auto" formControlName="movimentation_categories">
-                <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
-                    @for (category of categories; track category) {
-                    <mat-option [value]="category.name">{{category.name}} ({{category.signal === -1 ? 'Perda':
+                <input matInput type="text" [matAutocomplete]="autoMovimentationCategory"
+                    formControlName="movimentation_categories" placeholder="Ex. Comida, Roupas..."
+                    #inputMovimentationCategory (input)="filterCategories(inputMovimentationCategory.value)"
+                    (focus)="filterCategories(inputMovimentationCategory.value)">
+
+                <mat-autocomplete #autoMovimentationCategory="matAutocomplete" autoActiveFirstOption>
+                    @for (category of filteredCategories; track category) {
+                    <mat-option [value]="category.name"
+                        (onSelectionChange)="changeMovimentationCategory($event, category)">{{category.name}}
+                        ({{category.signal === -1 ? 'Perda':
                         'Ganho'}})</mat-option>
                     }
                 </mat-autocomplete>
@@ -57,34 +63,58 @@
             <mat-form-field style="width: 312px;">
                 <mat-label>Beneficiado</mat-label>
                 <mat-icon matPrefix>person</mat-icon>
-                <input matInput type="text" [matAutocomplete]="auto" formControlName="benefited">
-                <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
-                    @for (benefited of benefiteds; track benefited) {
-                    <mat-option [value]="benefited.name">{{benefited.name}}</mat-option>
+                <input matInput type="text" [matAutocomplete]="autoBenefited" formControlName="benefited"
+                    placeholder="Ex. Google, Microsoft..." #inputBenefited
+                    (input)="filterBenefiteds(inputBenefited.value)" (focus)="filterBenefiteds(inputBenefited.value)">
+
+                <mat-autocomplete #autoBenefited="matAutocomplete" autoActiveFirstOption>
+                    @for (benefited of filteredBenefiteds; track benefited) {
+                    <mat-option [value]="benefited.name"
+                        (onSelectionChange)="changeBenefitedType($event, benefited)">{{benefited.name}}</mat-option>
                     }
                 </mat-autocomplete>
                 <mat-hint>Selecione um beneficiado</mat-hint>
             </mat-form-field>
+            <mat-radio-group formControlName="benefited_type">
+                <mat-radio-button [value]="1">Pessoa Física</mat-radio-button>
+                <mat-radio-button [value]="2" style="margin-left: 15px;">Pessoa Jurídica</mat-radio-button>
+            </mat-radio-group>
 
-            <mat-form-field style="width: 280px;">
+        </div>
+
+        <div class="movement-register-row-group">
+            <mat-form-field style="width: 312px;">
                 <mat-label>Benefício</mat-label>
                 <mat-icon matPrefix>shopping_cart_outline_rounded</mat-icon>
-                <input matInput type="text" [matAutocomplete]="auto" formControlName="benefit">
-                <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
-                    @for (benefit of benefits; track benefit) {
-                    <mat-option [value]="benefit.name">{{benefit.name}}</mat-option>
+                <input matInput type="text" [matAutocomplete]="autoBenefit" formControlName="benefit"
+                    placeholder="Ex. Serviço y, Produto x..." #inputBenefits
+                    (input)="filterBenefits(inputBenefits.value)" (focus)="filterBenefits(inputBenefits.value)">
+
+                <mat-autocomplete #autoBenefit="matAutocomplete" autoActiveFirstOption>
+                    @for (benefit of filteredBenefits; track benefit) {
+                    <mat-option [value]="benefit.name"
+                        (onSelectionChange)="changeBenefitType($event, benefit)">{{benefit.name}}
+                        ({{benefit.benefit_category === 1 ? 'Produto':
+                        'Serviço'}})</mat-option>
                     }
                 </mat-autocomplete>
                 <mat-hint>Selecione um benefício</mat-hint>
             </mat-form-field>
-        </div>
 
+            <mat-radio-group formControlName="benefit_category">
+                <mat-radio-button [value]="1">Produto</mat-radio-button>
+                <mat-radio-button [value]="2" style="margin-left: 15px;">Serviço</mat-radio-button>
+            </mat-radio-group>
+        </div>
         <mat-form-field style="width: 380px;">
             <mat-label>Método de Pagamento</mat-label>
             <mat-icon matPrefix>payments_outline_rounded</mat-icon>
-            <input matInput type="text" [matAutocomplete]="auto" formControlName="payment_method">
-            <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
-                @for (paymentMethod of paymentMethods; track paymentMethod) {
+            <input matInput type="text" [matAutocomplete]="autoPaymentMethod" formControlName="payment_method"
+                placeholder="Ex. Débito, Pix..." #inputPaymentMethod
+                (input)="filterPaymentMethods(inputPaymentMethod.value)"
+                (focus)="filterPaymentMethods(inputPaymentMethod.value)">
+            <mat-autocomplete #autoPaymentMethod="matAutocomplete" autoActiveFirstOption>
+                @for (paymentMethod of filteredPaymentMethods; track paymentMethod) {
                 <mat-option [value]="paymentMethod.name">{{paymentMethod.name}}</mat-option>
                 }
             </mat-autocomplete>
@@ -93,10 +123,10 @@
         <mat-form-field style="width: 612px;">
             <mat-label>Observação</mat-label>
             <mat-icon matPrefix>text_fields</mat-icon>
-            <textarea matInput formControlName="observation"></textarea>
+            <textarea matInput formControlName="observation" placeholder="Ex. Compra feita devido à..."></textarea>
             <mat-hint>Digite uma observação</mat-hint>
         </mat-form-field>
     </form>
 
-    <button mat-button [disabled]="!movementFormGroup.valid" (click)="createMovement()">Salvar</button>
+    <button mat-stroked-button [disabled]="!movementFormGroup.valid" (click)="createNewMovement()">Salvar</button>
 </div>

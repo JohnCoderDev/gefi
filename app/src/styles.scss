@@ -4,7 +4,8 @@
 @include mat.core();
 
 html {
-    @include mdb.high-contrast-overrides(dark);
+    $theme: dark;
+    @include mdb.high-contrast-overrides($theme);
 }
 
 html,
