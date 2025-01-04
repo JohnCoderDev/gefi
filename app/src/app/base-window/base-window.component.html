@@ -7,7 +7,7 @@
             <mat-icon>menu</mat-icon>
         </button>
         <button mat-icon-button (click)="toggleTheme()" class="toggle-theme-button">
-            <mat-icon>{{useDarkTheme? 'sunny_outline_rounded': 'dark_mode_outline_rounded'}}</mat-icon>
+            <mat-icon>{{usingDarkTheme? 'sunny_outline_rounded': 'dark_mode_outline_rounded'}}</mat-icon>
         </button>
         <router-outlet></router-outlet>
     </mat-drawer-content>

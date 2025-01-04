@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { RouterOutlet } from '@angular/router';
+import { DarkThemeService } from '../../services/dark-theme/dark-theme.service';
 
 
 @Component({
@@ -16,25 +17,16 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './base-window.component.scss'
 })
 export class BaseWindowComponent implements OnInit {
-  useDarkTheme = true;
+  usingDarkTheme !: boolean;
+  constructor(private darkThemeService: DarkThemeService) { }
 
   ngOnInit(): void {
-    const isDarkMode = window.localStorage.getItem('useDarkMode');
-    this.useDarkTheme = isDarkMode === 'y';
-    this.saveCurrentThemePreference();
+    this.darkThemeService.setCurrentPreferedTheme();
+    this.usingDarkTheme = this.darkThemeService.isUsingDarkTheme();
   }
 
   toggleTheme(): void {
-    this.useDarkTheme = !this.useDarkTheme;
-    this.saveCurrentThemePreference();
-  }
-
-  private saveCurrentThemePreference(): void {
-    window.localStorage.setItem('useDarkMode', this.useDarkTheme ? 'y' : 'n');
-    const themeToRemove = !this.useDarkTheme ? 'dark-theme' : 'light-theme';
-    const newTheme = this.useDarkTheme ? 'dark-theme' : 'light-theme';
-    const htmlElement = document.querySelector('html');
-    htmlElement?.classList.remove(themeToRemove);
-    htmlElement?.classList.add(newTheme);
+    this.darkThemeService.toggleTheme();
+    this.usingDarkTheme = this.darkThemeService.isUsingDarkTheme();
   }
 }
