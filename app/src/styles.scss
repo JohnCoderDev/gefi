@@ -3,8 +3,12 @@
 
 @include mat.core();
 
-html {
+.dark-theme {
     @include mdb.high-contrast-overrides(dark);
+}
+
+.light-theme {
+    @include mdb.high-contrast-overrides(light);
 }
 
 html,

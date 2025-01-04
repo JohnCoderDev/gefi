@@ -31,5 +31,10 @@ export class BaseWindowComponent implements OnInit {
 
   private saveCurrentThemePreference(): void {
     window.localStorage.setItem('useDarkMode', this.useDarkTheme ? 'y' : 'n');
+    const themeToRemove = !this.useDarkTheme ? 'dark-theme' : 'light-theme';
+    const newTheme = this.useDarkTheme ? 'dark-theme' : 'light-theme';
+    const htmlElement = document.querySelector('html');
+    htmlElement?.classList.remove(themeToRemove);
+    htmlElement?.classList.add(newTheme);
   }
 }

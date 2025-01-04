@@ -1,13 +1,3 @@
-@use '../../mdb-theme-colors.scss' as mdb;
-
-.dark-theme {
-    @include mdb.high-contrast-overrides(dark);
-}
-
-.light-theme {
-    @include mdb.high-contrast-overrides(light);
-}
-
 .drawer-container {
     width: auto;
     height: 100%;
