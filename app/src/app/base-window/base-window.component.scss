@@ -1,23 +1,24 @@
 .drawer-container {
-    width: auto;
+    width: 100%;
     height: 100%;
-}
-
-.content-container {
-    padding: 20px;
 }
 
 .navbar-container {
     padding: 10px;
 }
 
-.menu-button {
-    position: absolute;
+.control-buttons-container {
+    position: fixed;
+    max-width: 80px;
+    display: flex;
+    flex-direction: column;
     z-index: 9999;
+    left: 10px;
+    top: 10px;
+    gap: 10px;
 }
 
-.toggle-theme-button {
-    position: absolute;
-    z-index: 9999;
-    top: 90px;
+.control-button {
+    width: 100%;
+    height: 100%;
 }

@@ -3,12 +3,16 @@
         <app-navbar></app-navbar>
     </mat-drawer>
     <mat-drawer-content class="content-container">
-        <button mat-icon-button (click)="drawer.toggle()" class="menu-button">
-            <mat-icon>menu</mat-icon>
-        </button>
-        <button mat-icon-button (click)="toggleTheme()" class="toggle-theme-button">
-            <mat-icon>{{usingDarkTheme? 'sunny_outline_rounded': 'dark_mode_outline_rounded'}}</mat-icon>
-        </button>
-        <router-outlet></router-outlet>
+        <div class="control-buttons-container">
+            <button mat-icon-button (click)="drawer.toggle()" class="control-button">
+                <mat-icon>menu</mat-icon>
+            </button>
+            <button mat-icon-button (click)=" toggleTheme()" class="control-button">
+                <mat-icon>{{usingDarkTheme? 'sunny_outline_rounded': 'dark_mode_outline_rounded'}}</mat-icon>
+            </button>
+        </div>
+        <div class="page-container">
+            <router-outlet></router-outlet>
+        </div>
     </mat-drawer-content>
 </mat-drawer-container>

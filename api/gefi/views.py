@@ -73,7 +73,12 @@ class MovementsViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MovementsSerializer
     filter_backend = [DjangoFilterBackend]
     permission_classes = [permissions.IsAuthenticated]
-    # filterset_fields = "__all__"
+    filterset_fields = {
+        "date_movement": ["gte", "lte", "exact"],
+        "movimentation_categories": ["exact"],
+        "movimentation_categories__signal": ["exact"],
+        "movimentation_categories__name": ["exact"],
+    }
 
 
 class CurrentAccountBalanceViewSet(viewsets.ModelViewSet):

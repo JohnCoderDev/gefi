@@ -1,3 +1,30 @@
-<apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
-    [dataLabels]="chartOptions.dataLabels" [grid]="chartOptions.grid" [stroke]="chartOptions.stroke"
-    [title]="chartOptions.title" [tooltip]="chartOptions.tooltip"></apx-chart>
+<div class="page-content-container">
+    <div class="header-card-container">
+        <mat-card [class]="darkModeService.isUsingDarkTheme() ? 'green-gradient-dark' : 'green-gradient-light'">
+            <mat-card-content class="card-content">
+                <mat-card-subtitle style="margin-bottom: 10px;">Ganhos este mês</mat-card-subtitle>
+                <mat-card-title>
+                    {{ totalEarns | mask : 'separator.2' : currencyOptions }}
+                </mat-card-title>
+            </mat-card-content>
+        </mat-card>
+        <mat-card [class]="darkModeService.isUsingDarkTheme() ? 'purple-gradient-dark' : 'purple-gradient-light'">
+            <mat-card-content class="card-content">
+                <mat-card-subtitle style=" margin-bottom: 10px;">Balanço atual</mat-card-subtitle>
+                <mat-card-title>
+                    {{ currentAvailableValue | mask : 'separator.2' : currencyOptions }}
+                </mat-card-title>
+            </mat-card-content>
+        </mat-card>
+        <mat-card [class]="darkModeService.isUsingDarkTheme() ? 'red-gradient-dark' : 'red-gradient-light'">
+            <mat-card-content class="card-content">
+                <mat-card-subtitle style="margin-bottom: 10px;"> Gastos este mês</mat-card-subtitle>
+                <mat-card-title>
+                    {{ totalSpents | mask : 'separator.2' : currencyOptions }}
+                </mat-card-title>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <app-chart-month-gain-losts #chartMonthGainLosts [inputData]="chartSpentsEarnsMonthData"
+        [usingDarkTheme]="darkModeService.isUsingDarkTheme()"></app-chart-month-gain-losts>
+</div>

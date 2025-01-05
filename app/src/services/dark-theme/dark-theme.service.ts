@@ -1,17 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DarkThemeService {
-  private usingDarkTheme: boolean = false;
-
   constructor(private localStorageService: LocalStorageService) { }
 
   setDarkTheme(): void {
     this.localStorageService.setValue('usingDarkTheme', 'y');
-    this.usingDarkTheme = true;
     const htmlElement = document.querySelector('html');
     htmlElement?.classList.remove('light-theme');
     htmlElement?.classList.add('dark-theme');
@@ -19,14 +16,13 @@ export class DarkThemeService {
 
   unsetDarkTheme(): void {
     this.localStorageService.setValue('usingDarkTheme', 'n');
-    this.usingDarkTheme = false;
     const htmlElement = document.querySelector('html');
     htmlElement?.classList.remove('dark-theme');
     htmlElement?.classList.add('light-theme');
   }
 
   setCurrentPreferedTheme(): void {
-    if (this.usingDarkTheme) {
+    if (this.isUsingDarkTheme()) {
       this.setDarkTheme();
     } else {
       this.unsetDarkTheme();
@@ -34,12 +30,11 @@ export class DarkThemeService {
   }
 
   isUsingDarkTheme(): boolean {
-    this.usingDarkTheme = this.localStorageService.getValue('usingDarkTheme') === 'y';
-    return this.usingDarkTheme;
+    return this.localStorageService.getValue('usingDarkTheme') === 'y';
   }
 
   toggleTheme(): void {
-    if (this.usingDarkTheme) {
+    if (this.isUsingDarkTheme()) {
       this.unsetDarkTheme();
     } else {
       this.setDarkTheme();
