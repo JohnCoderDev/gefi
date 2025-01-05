@@ -40,7 +40,7 @@ export class ChartMainSpentsCategoriesComponent {
       },
       dataLabels: {
         formatter: (value: any) => {
-          return `${value.toFixed(2).replace('.', ',')} % `
+          return `${value.toFixed(2).replace('.', ',')}% `
         }
       }
     }

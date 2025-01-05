@@ -51,7 +51,7 @@ export class InitialRegisterComponent implements AfterContentInit {
       if (response.body.length > 0) {
         this.currentAccountBalance = response.body[0];
         this.initialRegisterFormGroup.patchValue({
-          current_value: this.currentAccountBalance.current_value
+          current_value: this.currentAccountBalance.current_value,
         });
       }
     })

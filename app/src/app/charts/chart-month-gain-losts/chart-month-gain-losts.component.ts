@@ -59,6 +59,7 @@ export class ChartMonthGainLostsComponent implements OnChanges {
   ngOnChanges(changes: any): void {
     if (changes.inputData?.currentValue) {
       const currentValue = changes.inputData.currentValue;
+      console.log(currentValue);
       this.chart.updateOptions({
         series: [
           {
