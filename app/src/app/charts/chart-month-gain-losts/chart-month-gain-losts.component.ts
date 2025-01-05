@@ -1,31 +1,8 @@
 import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import moment from 'moment';
+import 'moment/locale/pt-br';
+import { ChartComponent, NgApexchartsModule } from "ng-apexcharts";
 
-import {
-  ApexAxisChartSeries,
-  ApexChart,
-  ApexXAxis,
-  ApexDataLabels,
-  ApexTitleSubtitle,
-  ApexStroke,
-  ApexMarkers,
-  ApexGrid,
-  ChartComponent,
-  ApexTooltip,
-  NgApexchartsModule
-} from "ng-apexcharts";
-
-export type ChartOptions = {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  xaxis: ApexXAxis;
-  dataLabels: ApexDataLabels;
-  markers: ApexMarkers;
-  grid: ApexGrid;
-  stroke: ApexStroke;
-  title: ApexTitleSubtitle;
-  tooltip: ApexTooltip,
-};
 
 @Component({
   selector: 'app-chart-month-gain-losts',
@@ -35,7 +12,6 @@ export type ChartOptions = {
 })
 export class ChartMonthGainLostsComponent implements OnChanges {
   @Input() inputData !: Object;
-  @Input() usingDarkTheme !: boolean;
   @ViewChild('chart') chart !: ChartComponent;
 
   earnsData = new Array();
@@ -45,23 +21,27 @@ export class ChartMonthGainLostsComponent implements OnChanges {
   constructor() {
     this.chartOptions = {
       series: [],
+      noData: {
+        text: "Sem dados para mostrar",
+        align: 'center',
+        verticalAlign: 'middle',
+      },
       chart: {
         foreColor: "var(--mat-sys-on-surface)",
-        height: 350,
         type: "area",
         zoom: {
-          enabled: true
+          enabled: false
         }
       },
       dataLabels: {
-        enabled: true
+        enabled: false
       },
       stroke: {
         curve: "smooth"
       },
       title: {
         text: "Gastos vs Ganhos Este Mês",
-        align: "left"
+        align: "center"
       },
       tooltip: {
         theme: 'dark',
@@ -70,12 +50,9 @@ export class ChartMonthGainLostsComponent implements OnChanges {
         size: 6
       },
       grid: {
-        row: {
-          colors: ["var(--mat-sys-surface)", "transparent"], // takes an array which will be repeated on columns
-          opacity: 0.5
-        },
+        show: true,
+        borderColor: "var(--mat-sys-outline-variant)"
       },
-      xaxis: {}
     }
   }
 
@@ -83,16 +60,28 @@ export class ChartMonthGainLostsComponent implements OnChanges {
     if (changes.inputData?.currentValue) {
       const currentValue = changes.inputData.currentValue;
       this.chart.updateOptions({
-        colors: ['#1cbd3f', '#D90D1E'],
+        series: [
+          {
+            name: 'Ganhos',
+            color: '#1cbd3f',
+            data: currentValue.earns
+          },
+          {
+            name: 'Gastos',
+            color: '#D90D1E',
+            data: currentValue.spents
+          }
+        ],
+        chart: {
+          width: currentValue.width,
+          height: currentValue.height
+        },
         yaxis: {
           labels: {
             formatter: (value: any) => {
               return `${currentValue.currentCurrencySymbol} ${value.toFixed(2).replace('.', ',')}`;
             }
           },
-        },
-        tooltip: {
-          theme: currentValue.useDarkTheme ? 'dark' : 'default',
         },
         xaxis: {
           type: 'datetime',
@@ -101,22 +90,12 @@ export class ChartMonthGainLostsComponent implements OnChanges {
           tickAmount: currentValue.daysInThisMonth,
           labels: {
             formatter: (value: any) => {
-              return moment(value).format('DD MMM YYYY');
+              return moment(value).locale('pt-br').format('DD MMM');
             },
-            rotate: -75,
+            rotate: -60,
             rotateAlways: true
           }
         },
-        series: [
-          {
-            name: 'Ganhos',
-            data: currentValue.earns
-          },
-          {
-            name: 'Gastos',
-            data: currentValue.spents
-          }
-        ]
       })
     }
   }

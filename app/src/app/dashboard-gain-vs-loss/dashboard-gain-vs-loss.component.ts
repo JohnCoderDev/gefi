@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 
 import { ChartMonthGainLostsComponent } from '../charts/chart-month-gain-losts/chart-month-gain-losts.component';
@@ -8,11 +8,13 @@ import { NgxMaskPipe } from 'ngx-mask';
 import { MatIconModule } from '@angular/material/icon';
 import { concat, tap } from 'rxjs';
 import moment from 'moment';
+import { ChartMainSpentsCategoriesComponent } from '../charts/chart-main-spents-categories/chart-main-spents-categories.component';
 
 @Component({
   selector: 'app-dashboard-gain-vs-loss',
   imports: [
     ChartMonthGainLostsComponent,
+    ChartMainSpentsCategoriesComponent,
     MatCardModule,
     MatIconModule,
     NgxMaskPipe,
@@ -23,6 +25,7 @@ import moment from 'moment';
 export class DashboardGainVsLossComponent implements OnInit {
   currentAvailableValue !: number;
   currentCurrencySymbol !: string;
+  movementsThisMonth !: Array<any>;
   earnsThisMonth !: Array<any>;
   spentThisMonth !: Array<any>;
   totalEarns !: number;
@@ -30,6 +33,7 @@ export class DashboardGainVsLossComponent implements OnInit {
   currencyOptions: any;
 
   chartSpentsEarnsMonthData !: Object;
+  chartMonthMainSpentsCategories !: Object;
 
   constructor(
     public darkModeService: DarkThemeService,
@@ -41,41 +45,40 @@ export class DashboardGainVsLossComponent implements OnInit {
   }
 
   fetchData(): void {
-
     concat(
       this.gefiWaiter.currentAccountBalance.fetcher.get().pipe(
         tap(currentBalanceResponse => {
           const data = currentBalanceResponse.body[0];
           this.currentAvailableValue = data.current_value;
-          this.gefiWaiter.currency.fetcher.get(`name=${data.currency}`).subscribe(
-            currencyResponse => {
-              this.currentCurrencySymbol = currencyResponse.body[0].symbol;
-              this.currencyOptions = {
-                thousandSeparator: '.',
-                prefix: this.currentCurrencySymbol + ' ',
-                leadZero: true,
-                allowNegativeNumbers: true,
-                decimalMarker: ','
-              }
-            }
-          )
+          this.currentCurrencySymbol = data.currency.symbol;
+          this.currencyOptions = {
+            thousandSeparator: '.',
+            prefix: this.currentCurrencySymbol + ' ',
+            leadZero: true,
+            allowNegativeNumbers: true,
+            decimalMarker: ','
+          }
         })
       ),
-      this.gefiWaiter.movements.getSpentsThisMonth().pipe(
+      this.gefiWaiter.movements.getMovementsThisMonth().pipe(
         tap(response => {
-          this.spentThisMonth = response.body;
-          this.totalSpents = this.spentThisMonth.reduce((p, c) => p + c.movemented_value, 0)
-        })
-      ),
-      this.gefiWaiter.movements.getEarnsThisMonth().pipe(
-        tap(response => {
-          this.earnsThisMonth = response.body;
-          this.totalEarns = this.earnsThisMonth.reduce((p, c) => p + c.movemented_value, 0);
+          this.movementsThisMonth = response.body;
+          this.totalSpents = this.movementsThisMonth.reduce((p, c) => p + (c.movimentation_categories.signal === -1 ? c.movemented_value : 0), 0)
+          this.totalEarns = this.movementsThisMonth.reduce((p, c) => p + (c.movimentation_categories.signal === 1 ? c.movemented_value : 0), 0)
         })
       )).subscribe({
         complete: () => {
           const startOfMonth = moment().startOf('month').toDate().getTime();
           const endOfMonth = moment().endOf('month').toDate().getTime();
+          const spents = this.movementsThisMonth.filter((v) => v.movimentation_categories.signal === -1);
+          const earns = this.movementsThisMonth.filter((v) => v.movimentation_categories.signal === 1);
+          let category: string = '';
+          const spentsPerCategorie = spents.reduce((p: { [key: string]: number }, c: any) => {
+            category = c.movimentation_categories.name;
+            p[category] = (category in p) ? p[category] + c.movemented_value : c.movemented_value;
+            return p;
+          }, {})
+
           const reduceData = (p: any, c: any) => {
             p.push({
               x: moment(c.date_movement).toDate().getTime(),
@@ -84,13 +87,22 @@ export class DashboardGainVsLossComponent implements OnInit {
             return p;
           }
           this.chartSpentsEarnsMonthData = {
-            earns: this.earnsThisMonth.reduce(reduceData, []),
-            spents: this.spentThisMonth.reduce(reduceData, []),
+            earns: earns.reduce(reduceData, []),
+            spents: spents.reduce(reduceData, []),
             daysInThisMonth: moment().daysInMonth(),
-            useDarkTheme: this.darkModeService.isUsingDarkTheme(),
             currentCurrencySymbol: this.currentCurrencySymbol,
             startOfMonth: startOfMonth,
-            endOfMonth: endOfMonth
+            endOfMonth: endOfMonth,
+            width: 948,
+            height: 420
+          }
+
+          this.chartMonthMainSpentsCategories = {
+            spents: Object.values(spentsPerCategorie),
+            categories: Object.keys(spentsPerCategorie),
+            currentCurrencySymbol: this.currentCurrencySymbol,
+            width: 520,
+            height: 420,
           }
         }
       })

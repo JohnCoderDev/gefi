@@ -46,12 +46,15 @@ class CurrencySerializer(serializers.ModelSerializer):
 
 
 class MovementsSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.MovementsModel
         fields = "__all__"
+        depth = 1
 
 
 class CurrentAccountBalanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CurrentAccountBalanceModel
+        depth = 1
         fields = "__all__"

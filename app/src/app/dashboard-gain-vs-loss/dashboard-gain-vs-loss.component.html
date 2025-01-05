@@ -1,4 +1,4 @@
-<div class="page-content-container">
+<div class="page-content-container custom-container">
     <div class="header-card-container">
         <mat-card [class]="darkModeService.isUsingDarkTheme() ? 'green-gradient-dark' : 'green-gradient-light'">
             <mat-card-content class="card-content">
@@ -25,6 +25,12 @@
             </mat-card-content>
         </mat-card>
     </div>
-    <app-chart-month-gain-losts #chartMonthGainLosts [inputData]="chartSpentsEarnsMonthData"
-        [usingDarkTheme]="darkModeService.isUsingDarkTheme()"></app-chart-month-gain-losts>
+
+    <div class="charts-container">
+        <div class="charts-row-group">
+            <app-chart-month-gain-losts [inputData]="chartSpentsEarnsMonthData"></app-chart-month-gain-losts>
+            <app-chart-main-spents-categories
+                [inputData]="chartMonthMainSpentsCategories"></app-chart-main-spents-categories>
+        </div>
+    </div>
 </div>

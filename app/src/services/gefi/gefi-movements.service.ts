@@ -16,11 +16,16 @@ export class GefiMovementsService {
 
   getSpentsThisMonth(): Observable<any> {
     const startOfMonth = moment().startOf('month').format('YYYY-MM-DD');
-    return this.fetcher.get(`date_movement__gte=${startOfMonth}&movimentation_categories__signal=-1`)
+    return this.fetcher.get(`date_movement__gte=${startOfMonth}&movimentation_categories__signal=-1`);
   }
 
   getEarnsThisMonth(): Observable<any> {
     const startOfMonth = moment().startOf('month').format('YYYY-MM-DD');
-    return this.fetcher.get(`date_movement__gte=${startOfMonth}&movimentation_categories__signal=1`)
+    return this.fetcher.get(`date_movement__gte=${startOfMonth}&movimentation_categories__signal=1`);
+  }
+
+  getMovementsThisMonth(): Observable<any> {
+    const startOfMonth = moment().startOf('month').format('YYYY-MM-DD');
+    return this.fetcher.get(`date_movement__gte=${startOfMonth}`);
   }
 }

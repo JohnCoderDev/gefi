@@ -27,12 +27,30 @@
     flex-direction: row;
     justify-content: center;
     gap: 80px;
+    margin-top: 40px;
 }
 
 .header-card-container * {
     border: none;
 }
 
+
 .card-content {
     min-width: 240px;
+}
+
+.charts-container {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.charts-row-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 50px
 }
