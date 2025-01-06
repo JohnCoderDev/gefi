@@ -1,0 +1,52 @@
+<table mat-table [dataSource]="latestMovementsData">
+    <ng-container matColumnDef="arrow_signal">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let movement">
+            <mat-icon [style]="'color: ' + (movement.movimentation_categories.signal === -1 ? '#D90D1E':'#1cbd3f' )">
+                @if (movement.movimentation_categories.signal === -1) {
+                arrow_downward_alt_rounded
+                } @else {
+                arrow_upward_alt_rounded
+                }
+            </mat-icon>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="date_movement">
+        <th mat-header-cell *matHeaderCellDef>Data da Movimentação</th>
+        <td mat-cell *matCellDef="let movement">{{movement.date_movement | date : 'dd/MM/YYYY'}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="movemented_value">
+        <th mat-header-cell *matHeaderCellDef>Valor Movimentado</th>
+        <td mat-cell *matCellDef="let movement"> {{ movement.movemented_value | mask: 'separator.2': {
+            thousandSeparator: '.',
+            decimalMarker: ',',
+            leadZero: true,
+            prefix: movement.currency.symbol + ' ',
+            } }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="movimentation_categories__name">
+        <th mat-header-cell *matHeaderCellDef>Categoria Movimentação</th>
+        <td mat-cell *matCellDef="let movement"> {{movement.movimentation_categories.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="benefit__name">
+        <th mat-header-cell *matHeaderCellDef>Benefício</th>
+        <td mat-cell *matCellDef="let movement"> {{movement.benefit.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="benefited__name">
+        <th mat-header-cell *matHeaderCellDef>Benefíciado</th>
+        <td mat-cell *matCellDef="let movement"> {{movement.benefited.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="payment_method__name">
+        <th mat-header-cell *matHeaderCellDef>Método de Pagamento</th>
+        <td mat-cell *matCellDef="let movement"> {{movement.payment_method.name}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

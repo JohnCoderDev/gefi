@@ -53,8 +53,21 @@ class MovementsSerializer(serializers.ModelSerializer):
         depth = 1
 
 
+class MovementsUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.MovementsModel
+        fields = "__all__"
+
+
 class CurrentAccountBalanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CurrentAccountBalanceModel
         depth = 1
+        fields = "__all__"
+
+
+class CurrentAccountBalanceUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CurrentAccountBalanceModel
         fields = "__all__"

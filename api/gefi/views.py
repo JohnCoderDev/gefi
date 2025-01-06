@@ -73,17 +73,34 @@ class MovementsViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MovementsSerializer
     filter_backend = [DjangoFilterBackend]
     permission_classes = [permissions.IsAuthenticated]
+    http_method_names = ["get"]
     filterset_fields = {
-        "date_movement": ["gte", "lte", "exact"],
+        "date_movement": ["gte", "lte", "exact", "lt", "gt"],
         "movimentation_categories": ["exact"],
         "movimentation_categories__signal": ["exact"],
         "movimentation_categories__name": ["exact"],
     }
 
 
+class MovementsUpdateViewSet(viewsets.ModelViewSet):
+    queryset = models.MovementsModel.objects.all()
+    serializer_class = serializers.MovementsUpdateSerializer
+    filter_backend = [DjangoFilterBackend]
+    permission_classes = [permissions.IsAuthenticated]
+
+
 class CurrentAccountBalanceViewSet(viewsets.ModelViewSet):
     queryset = models.CurrentAccountBalanceModel.objects.all()
     serializer_class = serializers.CurrentAccountBalanceSerializer
+    filter_backend = [DjangoFilterBackend]
+    permission_classes = [permissions.IsAuthenticated]
+    http_method_names = ["get"]
+    # filterset_fields = "__all__"
+
+
+class CurrentAccountBalanceUpdateViewSet(viewsets.ModelViewSet):
+    queryset = models.CurrentAccountBalanceModel.objects.all()
+    serializer_class = serializers.CurrentAccountBalanceUpdateSerializer
     filter_backend = [DjangoFilterBackend]
     permission_classes = [permissions.IsAuthenticated]
     # filterset_fields = "__all__"

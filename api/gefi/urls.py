@@ -13,7 +13,17 @@ router.register(r"Benefit", views.BenefitViewSet)
 router.register(r"PaymentMethod", views.PaymentMethodViewSet)
 router.register(r"Currency", views.CurrencyViewSet)
 router.register(r"Movements", views.MovementsViewSet)
+router.register(
+    r"MovementsUpdate",
+    views.MovementsUpdateViewSet,
+    basename="movementsmodel_update",
+)
 router.register(r"CurrentAccountBalance", views.CurrentAccountBalanceViewSet)
+router.register(
+    r"CurrentAccountBalanceUpdate",
+    views.CurrentAccountBalanceUpdateViewSet,
+    basename="currentaccountbalancemodel_update",
+)
 
 
 urlpatterns = [

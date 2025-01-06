@@ -70,12 +70,12 @@ export class InitialRegisterComponent implements AfterContentInit {
 
     if (!this.currentAccountBalance) {
       this.gefiService
-        .post('CurrentAccountBalance', this.initialRegisterFormGroup.value)
+        .post('CurrentAccountBalanceUpdate', this.initialRegisterFormGroup.value)
         .subscribe(updateData)
     } else {
       this.gefiService
         .patch(
-          `CurrentAccountBalance/${this.currentAccountBalance.id}`,
+          `CurrentAccountBalanceUpdate/${this.currentAccountBalance.id}`,
           this.initialRegisterFormGroup.value
         )
         .subscribe(updateData)

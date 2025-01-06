@@ -158,7 +158,7 @@ export class GefiApiService {
               currency: data.currency,
               valid: true,
             }
-            this.post('Movements', new_movement_data).subscribe();
+            this.post('MovementsUpdate', new_movement_data).subscribe();
           }
         )
       }

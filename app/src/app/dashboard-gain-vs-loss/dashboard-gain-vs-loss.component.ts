@@ -9,14 +9,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { concat, tap } from 'rxjs';
 import moment from 'moment';
 import { ChartMainSpentsCategoriesComponent } from '../charts/chart-main-spents-categories/chart-main-spents-categories.component';
+import { LatestMovementsTableComponent } from '../tables/latest-movements-table/latest-movements-table.component';
+import { ChartLastYearMovementsPerMonthComponent } from '../charts/chart-last-year-movements-per-month/chart-last-year-movements-per-month.component';
 
 @Component({
   selector: 'app-dashboard-gain-vs-loss',
   imports: [
     ChartMonthGainLostsComponent,
     ChartMainSpentsCategoriesComponent,
+    ChartLastYearMovementsPerMonthComponent,
     MatCardModule,
     MatIconModule,
+    LatestMovementsTableComponent,
     NgxMaskPipe,
   ],
   templateUrl: './dashboard-gain-vs-loss.component.html',
@@ -78,17 +82,19 @@ export class DashboardGainVsLossComponent implements OnInit {
             p[category] = (category in p) ? p[category] + c.movemented_value : c.movemented_value;
             return p;
           }, {})
-
-          const reduceData = (p: any, c: any) => {
-            p.push({
-              x: moment(c.date_movement).toDate().getTime(),
-              y: c.movemented_value
-            });
+          let date: any;
+          const summarizeData = (p: { [key: string]: any }, c: any) => {
+            date = moment(c.date_movement).format('YYYY-MM-DD');
+            p[date] = c.movemented_value + (date in p ? p[date] : 0)
             return p;
           }
+
+          const earnsSummarized = earns.reduce(summarizeData, {});
+          const spentsSummarized = spents.reduce(summarizeData, {});
+
           this.chartSpentsEarnsMonthData = {
-            earns: earns.reduce(reduceData, []),
-            spents: spents.reduce(reduceData, []),
+            earns: Object.keys(earnsSummarized).reduce((p: any, c: any) => { p.push({ x: moment(c).toDate().getTime(), y: earnsSummarized[c] }); return p; }, []),
+            spents: Object.keys(spentsSummarized).reduce((p: any, c: any) => { p.push({ x: moment(c).toDate().getTime(), y: spentsSummarized[c] }); return p }, []),
             daysInThisMonth: moment().daysInMonth(),
             currentCurrencySymbol: this.currentCurrencySymbol,
             startOfMonth: startOfMonth,

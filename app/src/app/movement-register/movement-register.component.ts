@@ -70,7 +70,7 @@ export class MovementRegisterComponent implements AfterViewInit {
   fetchServices() {
     this.gefiService.get('CurrentAccountBalance').subscribe(response => {
       if (response.body.length > 0) {
-        this.preferedCurrency = response.body[0].currency;
+        this.preferedCurrency = response.body[0].currency.name;
       }
       this.gefiService.get('MovimentationCategory').subscribe(response => {
         this.categories = response.body;
