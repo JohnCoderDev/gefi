@@ -130,14 +130,14 @@ export class GefiApiService {
   }
 
   private updateCurrentAccountBalance(data: any): Observable<any> {
-    return this.get(`CurrentAccountBalance`).pipe(tap(
+    return this.get(`CurrentAccountBalanceUpdate`).pipe(tap(
       response => {
         if (response.body.length === 0) return;
         const current_account_balance = response.body[0];
         const updated_account_balance = {
           current_value: current_account_balance.current_value + Number(data.movemented_value) * data.movimentation_signal
         }
-        this.patch(`CurrentAccountBalance/${current_account_balance.id}`, updated_account_balance).subscribe();
+        this.patch(`CurrentAccountBalanceUpdate/${current_account_balance.id}`, updated_account_balance).subscribe();
       }
     ))
   }

@@ -138,6 +138,7 @@ export class MovementRegisterComponent implements AfterViewInit {
     this.movementFormGroup.reset();
     this.movementFormGroup.patchValue({
       date_movement: current_values.date_movement,
+      currency: current_values.currency,
       movimentation_signal: current_values.movimentation_signal,
       benefit_category: current_values.benefit_category,
       benefited_type: current_values.benefited_type,
