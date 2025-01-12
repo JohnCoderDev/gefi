@@ -101,7 +101,7 @@ DATABASES = {
     # }
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "gefi",
+        "NAME": "gefi_test",
         "USER": "joao-furegatti",
         "PASSWORD": "",
         "HOST": "localhost",

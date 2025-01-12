@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, permissions
 from django_filters.rest_framework import DjangoFilterBackend
-from . import serializers, models
+from . import serializers, models, grouper
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -38,7 +38,7 @@ class BenefitedViewSet(viewsets.ModelViewSet):
 class BenefitViewSet(viewsets.ModelViewSet):
     queryset = models.BenefitModel.objects.all()
     serializer_class = serializers.BenefitSerializer
-    filter_backend = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend]
     permission_classes = [permissions.IsAuthenticated]
     filterset_fields = {
         "name": ["exact"],
@@ -71,7 +71,7 @@ class CurrencyViewSet(viewsets.ModelViewSet):
 class MovementsViewSet(viewsets.ModelViewSet):
     queryset = models.MovementsModel.objects.all()
     serializer_class = serializers.MovementsSerializer
-    filter_backend = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend]
     permission_classes = [permissions.IsAuthenticated]
     http_method_names = ["get"]
     filterset_fields = {
@@ -104,3 +104,9 @@ class CurrentAccountBalanceUpdateViewSet(viewsets.ModelViewSet):
     filter_backend = [DjangoFilterBackend]
     permission_classes = [permissions.IsAuthenticated]
     # filterset_fields = "__all__"
+
+
+class MovementsGroupByView(grouper.GroupByGenericView):
+
+    def get_queryset(self):
+        return models.MovementsModel.objects.all()
