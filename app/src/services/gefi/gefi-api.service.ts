@@ -9,6 +9,7 @@ import moment from 'moment';
   providedIn: 'root',
 })
 export class GefiApiService {
+  gefiAPI: GefiApi = new GefiApi();
   constructor(private http: HttpClient) { }
 
   get(path: string): Observable<any> {
@@ -177,6 +178,6 @@ export class GefiApiService {
     if (!path.endsWith('/') && !path.includes("/?")) {
       path = path + "/";
     }
-    return `${GefiApi.url}/${path}`;
+    return `${this.gefiAPI.url}/${path}`;
   }
 }

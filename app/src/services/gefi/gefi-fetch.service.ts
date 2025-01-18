@@ -10,28 +10,29 @@ export class GefiFetchService implements GefiRequest {
   basePath!: string;
   constructor(private gefiAPIService: GefiApiService) { }
 
-  get(queryparams?: string | null): Observable<any> {
-    const path = this.buildPath(null, queryparams);
+  get(queryparams?: string | null, id?: string | null, basePath?: string | null): Observable<any> {
+    const path = this.buildPath(id, queryparams, basePath);
     return this.gefiAPIService.get(path);
   }
-  post(data: Object): Observable<any> {
-    return this.gefiAPIService.post(this.basePath, data);
+  post(data: Object, basePath?: string | null): Observable<any> {
+    return this.gefiAPIService.post(basePath ?? this.basePath, data);
   }
-  patch(id: any, data: Object): Observable<any> {
-    const path = this.buildPath(id, null);
+  patch(id: any, data: Object, basePath?: string | null): Observable<any> {
+    const path = this.buildPath(id, null, basePath);
     return this.gefiAPIService.patch(path, data);
   }
-  update(id: any, data: Object): Observable<any> {
-    const path = this.buildPath(id, null);
+  update(id: any, data: Object, basePath?: string | null): Observable<any> {
+    const path = this.buildPath(id, null, basePath);
     return this.gefiAPIService.update(path, data);
   }
-  delete(id: any): Observable<any> {
-    const path = this.buildPath(id, null);
+  delete(id: any, basePath?: string | null): Observable<any> {
+    const path = this.buildPath(id, null, basePath);
     return this.gefiAPIService.delete(path);
   }
 
-  private buildPath(id?: any, queryparams?: string | null): string {
-    if (!this.basePath) return '';
-    return this.basePath + (id ? `/${id}` : '') + (queryparams ? `/?${queryparams}` : '');
+  private buildPath(id?: any, queryparams?: string | null, basePath?: string | null): string {
+    const basePathUsed = basePath ?? this.basePath;
+    if (!basePathUsed) return '';
+    return basePathUsed + (id ? `/${id}` : '') + (queryparams ? `/?${queryparams}` : '');
   }
 }

@@ -1,18 +1,21 @@
 <div class="page-content-container">
+    @if (progressBarVisible) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
     <div class="form-container">
         <form class="movement-register-forms" [formGroup]="movementFormGroup">
             <div class="movement-register-row-group">
                 <mat-form-field style="width: 380px;">
                     <mat-label>Valor Movimentado</mat-label>
                     <mat-icon matPrefix>attach_money_rounded</mat-icon>
-                    <input matInput required type="text" formControlName="movemented_value" placeholder="0,00"
-                        mask="separator.2" thousandSeparator="." decimalMarker="," [leadZero]="true">
+                    <input #movementedValue matInput required type="text" formControlName="movemented_value"
+                        placeholder="0,00" mask="separator.2" thousandSeparator="." decimalMarker="," [leadZero]="true">
                     <mat-hint>Digite a quantidade movimentada</mat-hint>
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Moeda de Preferência</mat-label>
-                    <mat-select formControlName="currency" [value]="preferedCurrency" placeholder="Ex. Real, Dólar...">
+                    <mat-select formControlName="currency" placeholder="Ex. Real, Dólar...">
                         <mat-option>Nenhuma</mat-option>
                         @for (currency of availableCurrencies; track currency) {
                         <mat-option [value]="currency.name">{{ currency.name }} ({{currency.symbol}})</mat-option>

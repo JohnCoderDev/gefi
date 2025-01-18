@@ -1,6 +1,5 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { GefiApiService } from '../../services/gefi/gefi-api.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
@@ -8,10 +7,19 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatProgressBar, MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { NgxMaskDirective } from 'ngx-mask';
 import { AlertSnackbarComponent } from '../alert-snackbar/alert-snackbar.component';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { GefiWaiterService } from '../../services/gefi/gefi-waiter.service';
+import { concat, concatMap, of, tap } from 'rxjs';
+import { MovimentationCategory } from '../../services/gefi/definitions/movimentation-category';
+import { Movement } from '../../services/gefi/definitions/movement';
+import { Benefited, BenefitedCategory } from '../../services/gefi/definitions/benefited';
+import { Benefit } from '../../services/gefi/definitions/benefit';
+import { PaymentMethod } from '../../services/gefi/definitions/payment-method';
+import moment from 'moment';
 
 @Component({
   selector: 'app-movement-register',
@@ -24,6 +32,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
     MatIconModule,
     MatAutocompleteModule,
     MatDatepickerModule,
+    MatProgressBar,
     MatRadioModule,
     NgxMaskDirective,
   ],
@@ -33,7 +42,6 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 })
 export class MovementRegisterComponent implements AfterViewInit {
   snackbar = new AlertSnackbarComponent();
-  preferedCurrency = "";
   availableCurrencies = new Array();
   categories = new Array();
   benefiteds = new Array();
@@ -43,7 +51,9 @@ export class MovementRegisterComponent implements AfterViewInit {
   filteredBenefiteds = new Array();
   filteredBenefits = new Array();
   filteredPaymentMethods = new Array();
+  progressBarVisible = false;
 
+  @ViewChild('movementedValue') movementedValueField!: ElementRef;
   movementFormGroup = new FormGroup({
     movemented_value: new FormControl('', [Validators.required]),
     date_movement: new FormControl(new Date(), [Validators.required]),
@@ -58,51 +68,130 @@ export class MovementRegisterComponent implements AfterViewInit {
     currency: new FormControl('', [Validators.required]),
   })
 
-  constructor(private gefiService: GefiApiService) { }
+  constructor(private waiter: GefiWaiterService) { }
 
   ngAfterViewInit(): void {
-    this.gefiService.get('Currency').subscribe(response => {
-      this.availableCurrencies = response.body;
+    this.movementedValueField.nativeElement.focus();
+    this.updateData();
+
+    this.movementFormGroup.patchValue({
+      movemented_value: "1.00",
+      observation: 'obsTest',
+      movimentation_categories: 'ljadlfjas',
+      movimentation_signal: -1,
+      benefited: 'qweiuroqup',
+      benefited_type: 2,
+      payment_method: 'alsdfjla',
+      benefit: 'qwerupq',
+      benefit_category: 1,
     })
-    this.fetchServices();
   }
 
-  fetchServices() {
-    this.gefiService.get('CurrentAccountBalance').subscribe(response => {
-      if (response.body.length > 0) {
-        this.preferedCurrency = response.body[0].currency.name;
-      }
-      this.gefiService.get('MovimentationCategory').subscribe(response => {
-        this.categories = response.body;
-        this.filteredCategories = response.body;
-      })
-      this.gefiService.get('Benefited').subscribe(response => {
-        this.benefiteds = response.body;
-        this.filteredBenefiteds = response.body;
-      })
-      this.gefiService.get('Benefit').subscribe(response => {
-        this.benefits = response.body;
-        this.filteredBenefits = response.body;
-      })
-      this.gefiService.get('PaymentMethod').subscribe(response => {
-        this.paymentMethods = response.body;
-        this.filteredPaymentMethods = response.body;
-      })
-    })
+  updateData() {
+    concat(
+      this.waiter.currency.getAllCurrencies().pipe(
+        tap(currencies => this.availableCurrencies = currencies)
+      ),
+      this.waiter.currentAccountBalance.getPreferedCurrency().pipe(
+        tap(currency => { this.movementFormGroup.patchValue({ currency: currency.name }) }),
+      ),
+      this.waiter.movimentationCategory.getAllCategories().pipe(
+        tap(categories => this.categories = categories)
+      ),
+      this.waiter.benefited.getAllBenefiteds().pipe(
+        tap(benefiteds => this.benefiteds = benefiteds)
+      ),
+      this.waiter.benefit.getAllBenefits().pipe(
+        tap(benefits => this.benefits = benefits)
+      ),
+      this.waiter.paymentMethod.getAllPaymentMethods().pipe(
+        tap(paymentMethods => this.paymentMethods = paymentMethods)
+      )
+    ).subscribe({ error: console.error })
   }
 
   createNewMovement(): void {
-    this.gefiService.createNewMovementFromForms(this.movementFormGroup.value).subscribe({
+    const data = this.movementFormGroup.value;
+    const movimentationCategory: MovimentationCategory = {
+      name: data.movimentation_categories || '',
+      signal: data.movimentation_signal || -1,
+      active: true
+    }
+    this.progressBarVisible = true;
+    this.waiter.movimentationCategory.createCategory(movimentationCategory).pipe(
+      concatMap(category => {
+        const benefited: Benefited = {
+          name: data.benefited || '',
+          benefited_type: data.benefited_type || 1,
+          benefited_category: data.movimentation_signal === -1 ? BenefitedCategory.supplier : BenefitedCategory.client,
+          movimentation_categories: [category.id]
+        }
+        return this.waiter.benefited.updateBenefited(benefited).pipe(concatMap(
+          benefited => of({
+            category: <MovimentationCategory>category,
+            benefited: <Benefited>benefited,
+          })
+        ))
+      }),
+      concatMap(response => {
+        const benefit: Benefit = {
+          name: data.benefit || '',
+          benefit_category: data.benefit_category || 1,
+          benefited: response.benefited.name,
+          movimentation_categories: [response.category.id || -1]
+        };
+        return this.waiter.benefit.updateBenefit(benefit).pipe(concatMap(
+          benefit => of({
+            benefit: <Benefit>benefit,
+            benefited: <Benefited>response.benefited,
+            category: <MovimentationCategory>response.category
+          })
+        ))
+      }),
+      concatMap(response => {
+        const paymentMethod: PaymentMethod = {
+          name: data.payment_method || ''
+        }
+        return this.waiter.paymentMethod.createPaymentMethod(paymentMethod).pipe(concatMap(
+          paymentMethod => of({
+            paymentMethod: <PaymentMethod>paymentMethod,
+            benefit: <Benefit>response.benefit,
+            benefited: <Benefited>response.benefited,
+            category: <MovimentationCategory>response.category
+          })
+        ))
+      }),
+      concatMap(response => {
+        const movement: Movement = {
+          date_movement: moment(data.date_movement).format('YYYY-MM-DD') || '',
+          movemented_value: Number(data.movemented_value),
+          observation: data.observation || '',
+          valid: true,
+          movimentation_categories: response.category.id || 0,
+          benefited: response.benefited.name,
+          payment_method: response.paymentMethod.name,
+          benefit: response.benefit.id || 0,
+          currency: data.currency || ''
+        }
+        return this.waiter.movements.createMovement(movement);
+      }),
+      concatMap(_ => {
+        const movementedValue = Number(data.movemented_value) * (data.movimentation_signal || 1);
+        return this.waiter.currentAccountBalance.updateCurrentAccountBalance(movementedValue);
+      })
+    ).subscribe({
       complete: () => {
-        this.snackbar.okSnackBar('Movimentação criada com sucesso');
         this.resetValues();
-        this.fetchServices();
+        this.snackbar.okSnackBar('Movimentação criada com sucesso');
+        this.movementedValueField.nativeElement.focus();
+        this.progressBarVisible = false;
       },
       error: error => {
-        this.snackbar.okSnackBar('Não foi possível criar a movimentação');
-        console.log(error);
+        this.snackbar.okSnackBar('Não foi possível criar a movimentação, cheque o console');
+        console.error(error);
+        this.progressBarVisible = false;
       }
-    });
+    })
   }
 
   filterCategories(value: any) {

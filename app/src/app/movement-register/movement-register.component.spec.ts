@@ -10,7 +10,7 @@ describe('MovementRegisterComponent', () => {
     await TestBed.configureTestingModule({
       imports: [MovementRegisterComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(MovementRegisterComponent);
     component = fixture.componentInstance;

@@ -3,15 +3,23 @@ import { GefiFetchService } from './gefi-fetch.service';
 import { GefiApiService } from './gefi-api.service';
 import moment from 'moment';
 import { map, Observable } from 'rxjs';
+import { Movement } from './definitions/movement';
+import { MovementsRules } from './rules/movement/movement-rules';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GefiMovementsService {
   fetcher: GefiFetchService;
+
   constructor(private gefiAPIService: GefiApiService) {
     this.fetcher = new GefiFetchService(this.gefiAPIService);
     this.fetcher.basePath = "Movements";
+  }
+
+  createMovement(movement: Movement): Observable<any> {
+    MovementsRules.applyRules(movement);
+    return this.fetcher.post(movement, "MovementsUpdate");
   }
 
   getSpentsThisMonth(): Observable<any> {
