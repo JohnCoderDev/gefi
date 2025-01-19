@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatProgressBar, MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { NgxMaskDirective } from 'ngx-mask';
 import { AlertSnackbarComponent } from '../alert-snackbar/alert-snackbar.component';
@@ -32,7 +32,7 @@ import moment from 'moment';
     MatIconModule,
     MatAutocompleteModule,
     MatDatepickerModule,
-    MatProgressBar,
+    MatProgressBarModule,
     MatRadioModule,
     NgxMaskDirective,
   ],
@@ -71,21 +71,9 @@ export class MovementRegisterComponent implements AfterViewInit {
   constructor(private waiter: GefiWaiterService) { }
 
   ngAfterViewInit(): void {
-    this.movementedValueField.nativeElement.focus();
     this.updateData();
-
-    this.movementFormGroup.patchValue({
-      movemented_value: "1.00",
-      observation: 'obsTest',
-      movimentation_categories: 'ljadlfjas',
-      movimentation_signal: -1,
-      benefited: 'qweiuroqup',
-      benefited_type: 2,
-      payment_method: 'alsdfjla',
-      benefit: 'qwerupq',
-      benefit_category: 1,
-    })
   }
+
 
   updateData() {
     concat(
@@ -126,12 +114,12 @@ export class MovementRegisterComponent implements AfterViewInit {
           benefited_category: data.movimentation_signal === -1 ? BenefitedCategory.supplier : BenefitedCategory.client,
           movimentation_categories: [category.id]
         }
-        return this.waiter.benefited.updateBenefited(benefited).pipe(concatMap(
-          benefited => of({
+        return this.waiter.benefited.updateBenefited(benefited).pipe(
+          concatMap(benefited => of({
             category: <MovimentationCategory>category,
             benefited: <Benefited>benefited,
           })
-        ))
+          ))
       }),
       concatMap(response => {
         const benefit: Benefit = {

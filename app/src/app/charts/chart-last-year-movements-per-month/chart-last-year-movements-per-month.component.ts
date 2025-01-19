@@ -1,8 +1,6 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
 import { GefiMovementsService } from '../../../services/gefi/gefi-movements.service';
-import moment from 'moment';
-import 'moment/locale/pt-br';
 
 
 @Component({
@@ -15,8 +13,6 @@ export class ChartLastYearMovementsPerMonthComponent {
   @Input() inputData !: Object;
   @ViewChild('chart') chart !: ChartComponent;
 
-  earnsData = new Array();
-  spentsData = new Array();
   public chartOptions: any;
 
   constructor(private movements: GefiMovementsService) {
@@ -57,28 +53,22 @@ export class ChartLastYearMovementsPerMonthComponent {
         borderColor: "var(--mat-sys-outline-variant)"
       },
     }
-    movements.getLastYearMovementsResume().subscribe(response => {
-      const data = response.body;
+    this.movements.getResumedMonthlyMovementsLastYear().subscribe(response => {
       this.chart.updateOptions({
         series: [
           {
             name: "Total Ganhos",
             color: '#1cbd3f',
-            data: data.period.reduce((p: any, c: any) => { p.push(data[c]?.earns || 0); return p; }, [])
+            data: response.earns
           },
           {
             name: "Total Gastos",
             color: '#D90D1E',
-            data: data.period.reduce((p: any, c: any) => { p.push(data[c]?.spents || 0); return p; }, [])
+            data: response.spents
           }
         ],
         xaxis: {
-          categories: data.period,
-          labels: {
-            formatter: (value: any) => {
-              return moment(value).locale('pt-BR').format('MMM YYYY')
-            }
-          }
+          categories: response.labels
         },
         yaxis: {
           labels: {
@@ -88,13 +78,25 @@ export class ChartLastYearMovementsPerMonthComponent {
           }
         },
         dataLabels: {
-          enabled: true,
-          formatter: (value: any) => {
-            return value.toFixed(2).replace('.', ',');
-          }
+          enabled: false,
         }
       })
     })
   }
 
+  ngOnChanges(changes: any) {
+    if (changes.inputData?.currentValue) {
+      const data = changes.inputData?.currentValue;
+      const currencySymbol = data.currentCurrencySymbol;
+      this.chart.updateOptions({
+        yaxis: {
+          labels: {
+            formatter: (value: any) => {
+              return currencySymbol + " " + value.toFixed(2).replace('.', ',');
+            }
+          }
+        }
+      })
+    }
+  }
 }

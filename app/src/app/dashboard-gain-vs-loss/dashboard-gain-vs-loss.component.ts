@@ -36,8 +36,9 @@ export class DashboardGainVsLossComponent implements OnInit {
   totalSpents !: number;
   currencyOptions: any;
 
-  chartSpentsEarnsMonthData !: Object;
-  chartMonthMainSpentsCategories !: Object;
+  chartMovementsMonthInput !: Object;
+  chartMonthCategoriesInput !: Object;
+  chartLastYearMovementsInput !: Object;
 
   constructor(
     public darkModeService: DarkThemeService,
@@ -64,37 +65,17 @@ export class DashboardGainVsLossComponent implements OnInit {
           }
         })
       ),
-      this.gefiWaiter.movements.getMovementsThisMonth().pipe(
+      this.gefiWaiter.movements.getTotalsThisMonth().pipe(
         tap(response => {
-          this.movementsThisMonth = response.body;
-          this.totalSpents = this.movementsThisMonth.reduce((p, c) => p + (c.movimentation_categories.signal === -1 ? c.movemented_value : 0), 0)
-          this.totalEarns = this.movementsThisMonth.reduce((p, c) => p + (c.movimentation_categories.signal === 1 ? c.movemented_value : 0), 0)
+          this.totalSpents = response.spents;
+          this.totalEarns = response.earns;
         })
       )).subscribe({
         complete: () => {
           const startOfMonth = moment().startOf('month').toDate().getTime();
           const endOfMonth = moment().endOf('month').toDate().getTime();
-          const spents = this.movementsThisMonth.filter((v) => v.movimentation_categories.signal === -1);
-          const earns = this.movementsThisMonth.filter((v) => v.movimentation_categories.signal === 1);
-          let category: string = '';
-          const spentsPerCategorie = spents.reduce((p: { [key: string]: number }, c: any) => {
-            category = c.movimentation_categories.name;
-            p[category] = (category in p) ? p[category] + c.movemented_value : c.movemented_value;
-            return p;
-          }, {})
-          let date: any;
-          const summarizeData = (p: { [key: string]: any }, c: any) => {
-            date = moment(c.date_movement).format('YYYY-MM-DD');
-            p[date] = c.movemented_value + (date in p ? p[date] : 0)
-            return p;
-          }
 
-          const earnsSummarized = earns.reduce(summarizeData, {});
-          const spentsSummarized = spents.reduce(summarizeData, {});
-
-          this.chartSpentsEarnsMonthData = {
-            earns: Object.keys(earnsSummarized).reduce((p: any, c: any) => { p.push({ x: moment(c).toDate().getTime(), y: earnsSummarized[c] }); return p; }, []),
-            spents: Object.keys(spentsSummarized).reduce((p: any, c: any) => { p.push({ x: moment(c).toDate().getTime(), y: spentsSummarized[c] }); return p }, []),
+          this.chartMovementsMonthInput = {
             daysInThisMonth: moment().daysInMonth(),
             currentCurrencySymbol: this.currentCurrencySymbol,
             startOfMonth: startOfMonth,
@@ -103,12 +84,14 @@ export class DashboardGainVsLossComponent implements OnInit {
             height: 420
           }
 
-          this.chartMonthMainSpentsCategories = {
-            spents: Object.values(spentsPerCategorie),
-            categories: Object.keys(spentsPerCategorie),
+          this.chartMonthCategoriesInput = {
             currentCurrencySymbol: this.currentCurrencySymbol,
             width: 520,
             height: 420,
+          }
+
+          this.chartLastYearMovementsInput = {
+            currentCurrencySymbol: this.currentCurrencySymbol,
           }
         }
       })

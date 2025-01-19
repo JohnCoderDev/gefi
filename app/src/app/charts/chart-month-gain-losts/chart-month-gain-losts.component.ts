@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import moment from 'moment';
 import 'moment/locale/pt-br';
 import { ChartComponent, NgApexchartsModule } from "ng-apexcharts";
+import { GefiMovementsService } from '../../../services/gefi/gefi-movements.service';
 
 
 @Component({
@@ -18,7 +19,7 @@ export class ChartMonthGainLostsComponent implements OnChanges {
   spentsData = new Array();
   public chartOptions: any;
 
-  constructor() {
+  constructor(private movements: GefiMovementsService) {
     this.chartOptions = {
       series: [],
       noData: {
@@ -54,24 +55,31 @@ export class ChartMonthGainLostsComponent implements OnChanges {
         borderColor: "var(--mat-sys-outline-variant)"
       },
     }
+
+    this.movements.getResumedMovementsThisMonth().subscribe(
+      response => {
+        this.chart.updateOptions({
+          series: [
+            {
+              name: 'Ganhos',
+              color: '#1cbd3f',
+              data: response.earns
+            },
+            {
+              name: 'Gastos',
+              color: '#D90D1E',
+              data: response.spents
+            }
+          ],
+        })
+      }
+    )
   }
 
   ngOnChanges(changes: any): void {
     if (changes.inputData?.currentValue) {
       const currentValue = changes.inputData.currentValue;
       this.chart.updateOptions({
-        series: [
-          {
-            name: 'Ganhos',
-            color: '#1cbd3f',
-            data: currentValue.earns
-          },
-          {
-            name: 'Gastos',
-            color: '#D90D1E',
-            data: currentValue.spents
-          }
-        ],
         chart: {
           width: currentValue.width,
           height: currentValue.height

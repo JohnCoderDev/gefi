@@ -109,4 +109,6 @@ class CurrentAccountBalanceUpdateViewSet(viewsets.ModelViewSet):
 class MovementsGroupByView(grouper.GroupByGenericView):
 
     def get_queryset(self):
-        return models.MovementsModel.objects.all()
+        return models.MovementsModel.objects.all().order_by(
+            "date_movement__year", "date_movement__month"
+        )
