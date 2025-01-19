@@ -197,6 +197,10 @@ class MovementsModel(models.Model):
         default=True,
     )
 
+    @property
+    def movemented_value_with_signal(self):
+        return self.movimentation_categories.signal * self.movemented_value
+
 
 class CurrentAccountBalanceModel(models.Model):
     current_value = models.FloatField(

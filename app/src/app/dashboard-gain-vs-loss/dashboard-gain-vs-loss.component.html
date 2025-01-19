@@ -28,15 +28,16 @@
 
     <div class="dashboard-elements-container">
         <div class="dashboard-elements-row-group">
-            <app-chart-month-gain-losts [inputData]="chartSpentsEarnsMonthData"></app-chart-month-gain-losts>
+            <app-chart-month-gain-losts [inputData]="chartMovementsMonthInput"></app-chart-month-gain-losts>
             <app-chart-main-spents-categories
-                [inputData]="chartMonthMainSpentsCategories"></app-chart-main-spents-categories>
+                [inputData]="chartMonthCategoriesInput"></app-chart-main-spents-categories>
         </div>
         <div class="dashboard-elements-row-group" style="margin-top: 40px;">
             <app-latest-movements-table style="width: 1548px;"></app-latest-movements-table>
         </div>
         <div class="dashboard-elements-row-group" style="margin-top: 150px;">
-            <app-chart-last-year-movements-per-month></app-chart-last-year-movements-per-month>
+            <app-chart-last-year-movements-per-month
+                [inputData]="chartLastYearMovementsInput"></app-chart-last-year-movements-per-month>
         </div>
     </div>
 </div>

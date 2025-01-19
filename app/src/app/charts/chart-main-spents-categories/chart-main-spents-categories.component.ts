@@ -1,5 +1,6 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { ChartComponent, NgApexchartsModule } from "ng-apexcharts";
+import { GefiMovementsService } from '../../../services/gefi/gefi-movements.service';
 
 @Component({
   selector: 'app-chart-main-spents-categories',
@@ -14,7 +15,7 @@ export class ChartMainSpentsCategoriesComponent {
   spentsData = new Array();
   public chartOptions: any;
 
-  constructor() {
+  constructor(private movements: GefiMovementsService) {
     this.chartOptions = {
       series: [],
       noData: {
@@ -40,18 +41,24 @@ export class ChartMainSpentsCategoriesComponent {
       },
       dataLabels: {
         formatter: (value: any) => {
-          return `${value.toFixed(2).replace('.', ',')}% `
+          return `${value.toFixed(2).replace('.', ',')}%`
         }
       }
     }
+    this.movements.getSpentsThisMonthPerCategorie().subscribe(
+      response => {
+        this.chart.updateOptions({
+          series: response.spents,
+          labels: response.labels,
+        })
+      }
+    )
   }
 
   ngOnChanges(changes: any): void {
     if (changes.inputData?.currentValue) {
       const currentValue = changes.inputData.currentValue;
       this.chart.updateOptions({
-        series: currentValue.spents,
-        labels: currentValue.categories,
         tooltip: {
           y: {
             formatter: (value: any) => {

@@ -19,7 +19,6 @@ export class GefiCurrentAccountBalanceService {
   updateCurrentAccountBalance(amount: number): Observable<any> {
     return this.getCurrentAccountBalance().pipe(
       concatMap(response => {
-        response.current_value += amount;
         const newData = <CurrentAccountBalance>{
           current_value: response.current_value + amount,
           currency: response.currency.name,

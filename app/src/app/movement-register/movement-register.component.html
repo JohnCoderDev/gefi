@@ -9,7 +9,8 @@
                     <mat-label>Valor Movimentado</mat-label>
                     <mat-icon matPrefix>attach_money_rounded</mat-icon>
                     <input #movementedValue matInput required type="text" formControlName="movemented_value"
-                        placeholder="0,00" mask="separator.2" thousandSeparator="." decimalMarker="," [leadZero]="true">
+                        placeholder="0,00" mask="separator.2" thousandSeparator="." decimalMarker="," [leadZero]="true"
+                        autofocus>
                     <mat-hint>Digite a quantidade movimentada</mat-hint>
                 </mat-form-field>
 
