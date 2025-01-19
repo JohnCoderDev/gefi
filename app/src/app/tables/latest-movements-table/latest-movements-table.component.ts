@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, Input } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { GefiMovementsService } from '../../../services/gefi/gefi-movements.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,7 +18,9 @@ import { NgxMaskPipe } from 'ngx-mask';
   styleUrl: './latest-movements-table.component.scss'
 })
 export class LatestMovementsTableComponent implements AfterViewInit {
+  @Input() inputData !: any;
   latestMovementsData = new MatTableDataSource();
+
   displayedColumns = [
     "arrow_signal",
     "date_movement",
@@ -31,10 +33,15 @@ export class LatestMovementsTableComponent implements AfterViewInit {
 
   constructor(private movements: GefiMovementsService) { }
   ngAfterViewInit(): void {
-    this.fetchLatestMovements();
+    this.updateLatestMovements();
   }
 
-  fetchLatestMovements(): void {
+
+  ngOnChanges(_: any): void {
+    this.updateLatestMovements();
+  }
+
+  updateLatestMovements(): void {
     this.movements.getLatestMovements(15).subscribe(response => {
       this.latestMovementsData.data = response.body.results;
     })

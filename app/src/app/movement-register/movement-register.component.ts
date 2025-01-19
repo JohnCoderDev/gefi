@@ -170,6 +170,7 @@ export class MovementRegisterComponent implements AfterViewInit {
     ).subscribe({
       complete: () => {
         this.resetValues();
+        this.updateData();
         this.snackbar.okSnackBar('Movimentação criada com sucesso');
         this.movementedValueField.nativeElement.focus();
         this.progressBarVisible = false;
@@ -177,6 +178,7 @@ export class MovementRegisterComponent implements AfterViewInit {
       error: error => {
         this.snackbar.okSnackBar('Não foi possível criar a movimentação, cheque o console');
         console.error(error);
+        this.updateData();
         this.progressBarVisible = false;
       }
     })

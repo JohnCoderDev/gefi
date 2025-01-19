@@ -45,6 +45,11 @@ export class ChartMainSpentsCategoriesComponent {
         }
       }
     }
+
+    this.updateData();
+  }
+
+  updateData(): void {
     this.movements.getSpentsThisMonthPerCategorie().subscribe(
       response => {
         this.chart.updateOptions({
@@ -57,6 +62,7 @@ export class ChartMainSpentsCategoriesComponent {
 
   ngOnChanges(changes: any): void {
     if (changes.inputData?.currentValue) {
+      this.updateData();
       const currentValue = changes.inputData.currentValue;
       this.chart.updateOptions({
         tooltip: {

@@ -55,7 +55,10 @@ export class ChartMonthGainLostsComponent implements OnChanges {
         borderColor: "var(--mat-sys-outline-variant)"
       },
     }
+    this.updateData();
+  }
 
+  updateData(): void {
     this.movements.getResumedMovementsThisMonth().subscribe(
       response => {
         this.chart.updateOptions({
@@ -75,9 +78,9 @@ export class ChartMonthGainLostsComponent implements OnChanges {
       }
     )
   }
-
   ngOnChanges(changes: any): void {
     if (changes.inputData?.currentValue) {
+      this.updateData();
       const currentValue = changes.inputData.currentValue;
       this.chart.updateOptions({
         chart: {

@@ -1,5 +1,7 @@
 <div class="page-content-container custom-container">
     <div class="header-card-container">
+        <button mat-icon-button matTooltip="atualizar" style="position: fixed; left: 10px; top: 125px;"
+            (click)="updateData()"><mat-icon>refresh_rounded</mat-icon></button>
         <mat-card [class]="darkModeService.isUsingDarkTheme() ? 'green-gradient-dark' : 'green-gradient-light'">
             <mat-card-content class="card-content">
                 <mat-card-subtitle style="margin-bottom: 10px;">Ganhos este mês</mat-card-subtitle>
@@ -33,7 +35,8 @@
                 [inputData]="chartMonthCategoriesInput"></app-chart-main-spents-categories>
         </div>
         <div class="dashboard-elements-row-group" style="margin-top: 40px;">
-            <app-latest-movements-table style="width: 1548px;"></app-latest-movements-table>
+            <app-latest-movements-table style="width: 1548px;"
+                [inputData]="tableLatestMovementsInput"></app-latest-movements-table>
         </div>
         <div class="dashboard-elements-row-group" style="margin-top: 150px;">
             <app-chart-last-year-movements-per-month

@@ -53,6 +53,10 @@ export class ChartLastYearMovementsPerMonthComponent {
         borderColor: "var(--mat-sys-outline-variant)"
       },
     }
+    this.updateData();
+  }
+
+  updateData(): void {
     this.movements.getResumedMonthlyMovementsLastYear().subscribe(response => {
       this.chart.updateOptions({
         series: [
@@ -82,10 +86,11 @@ export class ChartLastYearMovementsPerMonthComponent {
         }
       })
     })
-  }
 
+  }
   ngOnChanges(changes: any) {
     if (changes.inputData?.currentValue) {
+      this.updateData();
       const data = changes.inputData?.currentValue;
       const currencySymbol = data.currentCurrencySymbol;
       this.chart.updateOptions({

@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-
 import { ChartMonthGainLostsComponent } from '../charts/chart-month-gain-losts/chart-month-gain-losts.component';
 import { DarkThemeService } from '../../services/dark-theme/dark-theme.service';
 import { GefiWaiterService } from '../../services/gefi/gefi-waiter.service';
 import { NgxMaskPipe } from 'ngx-mask';
 import { MatIconModule } from '@angular/material/icon';
 import { concat, tap } from 'rxjs';
-import moment from 'moment';
 import { ChartMainSpentsCategoriesComponent } from '../charts/chart-main-spents-categories/chart-main-spents-categories.component';
 import { LatestMovementsTableComponent } from '../tables/latest-movements-table/latest-movements-table.component';
 import { ChartLastYearMovementsPerMonthComponent } from '../charts/chart-last-year-movements-per-month/chart-last-year-movements-per-month.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import moment from 'moment';
 
 @Component({
   selector: 'app-dashboard-gain-vs-loss',
@@ -20,6 +21,8 @@ import { ChartLastYearMovementsPerMonthComponent } from '../charts/chart-last-ye
     ChartLastYearMovementsPerMonthComponent,
     MatCardModule,
     MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
     LatestMovementsTableComponent,
     NgxMaskPipe,
   ],
@@ -39,6 +42,7 @@ export class DashboardGainVsLossComponent implements OnInit {
   chartMovementsMonthInput !: Object;
   chartMonthCategoriesInput !: Object;
   chartLastYearMovementsInput !: Object;
+  tableLatestMovementsInput !: Object;
 
   constructor(
     public darkModeService: DarkThemeService,
@@ -46,10 +50,10 @@ export class DashboardGainVsLossComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.fetchData();
+    this.updateData();
   }
 
-  fetchData(): void {
+  updateData(): void {
     concat(
       this.gefiWaiter.currentAccountBalance.fetcher.get().pipe(
         tap(currentBalanceResponse => {
@@ -92,6 +96,10 @@ export class DashboardGainVsLossComponent implements OnInit {
 
           this.chartLastYearMovementsInput = {
             currentCurrencySymbol: this.currentCurrencySymbol,
+          }
+
+          this.tableLatestMovementsInput = {
+            changed: true,
           }
         }
       })
